@@ -159,7 +159,7 @@ Queue per group was not run at 10,000 groups: it needs a worker and a blocking c
 
 ```bash
 npm install
-docker compose up -d        # Redis on 127.0.0.1:6390, persistence off
+npm run redis:up            # throwaway Redis 7 on 127.0.0.1:6390, persistence off (npm run redis:down)
 npm test                    # 25 tests against BullMQ 5.81.5 (~70 s)
 npm run test:v6             # the same tests against BullMQ 6.3.15 in a temp copy
 bash bench/all.sh           # whole benchmark matrix (~15 min). FLUSHES the Redis at port 6390.

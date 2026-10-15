@@ -6,13 +6,17 @@
   "license": "UNLICENSED",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "files": ["dist"],
-  "engines": { "node": ">=18" },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.build.json && mkdir -p dist/lua && cp src/lua/*.lua dist/lua/",
     "typecheck": "tsc --noEmit",
-    "redis:up": "docker compose up -d",
-    "redis:down": "docker compose down",
+    "redis:up": "docker run -d --rm --name bullmq-groups-redis -p 127.0.0.1:6390:6379 redis:7-alpine redis-server --save '' --appendonly no",
+    "redis:down": "docker rm -f bullmq-groups-redis",
     "test": "node --import tsx --test --test-concurrency=1 test/*.test.ts",
     "test:v6": "bash scripts/test-bullmq-v6.sh",
     "bench": "tsx bench/run.ts"
