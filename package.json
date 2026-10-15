@@ -1,0 +1,32 @@
+{
+  "name": "@sparq/bullmq-groups",
+  "version": "0.1.0",
+  "private": true,
+  "description": "POC: per-group FIFO with round-robin fairness between groups, on top of open-source BullMQ",
+  "license": "UNLICENSED",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist"],
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json && mkdir -p dist/lua && cp src/lua/*.lua dist/lua/",
+    "typecheck": "tsc --noEmit",
+    "redis:up": "docker compose up -d",
+    "redis:down": "docker compose down",
+    "test": "node --import tsx --test --test-concurrency=1 test/*.test.ts",
+    "test:v6": "bash scripts/test-bullmq-v6.sh",
+    "bench": "tsx bench/run.ts"
+  },
+  "peerDependencies": {
+    "bullmq": ">=5.40.0 <7"
+  },
+  "dependencies": {
+    "ioredis": "^5.4.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "bullmq": "5.81.5",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.3"
+  }
+}

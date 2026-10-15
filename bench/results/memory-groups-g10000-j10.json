@@ -1,0 +1,73 @@
+{
+  "scenario": "memory",
+  "approach": "groups",
+  "params": {
+    "scenario": "memory",
+    "approach": "groups",
+    "groups": 10000,
+    "jobs": 10,
+    "concurrency": 50,
+    "workMs": 0
+  },
+  "env": {
+    "node": "v22.22.3",
+    "bullmq": "5.81.5",
+    "redis": "7.4.10"
+  },
+  "enqueue": {
+    "ms": 2252,
+    "jobsPerSec": 44405,
+    "redis": {
+      "commandsPerJob": 14.3,
+      "callsPerJob": 14.3,
+      "scriptRunsPerJob": 0.1,
+      "redisCpuMsPer1kJobs": 17.3,
+      "top": [
+        [
+          "hget",
+          3.3
+        ],
+        [
+          "hexists",
+          3
+        ],
+        [
+          "hset",
+          1.3
+        ],
+        [
+          "zadd",
+          1.2
+        ],
+        [
+          "hincrby",
+          1.2
+        ],
+        [
+          "lindex",
+          1.1
+        ],
+        [
+          "rpush",
+          1
+        ],
+        [
+          "sismember",
+          1
+        ]
+      ]
+    }
+  },
+  "memory": {
+    "bytesPerJob": 374,
+    "usedMemoryMB": 37.7,
+    "keys": 20011,
+    "keysPerGroup": 2
+  },
+  "order": {
+    "inversions": 0,
+    "overlaps": 0
+  },
+  "workerRssMB": 164,
+  "approachConnections": 2
+}

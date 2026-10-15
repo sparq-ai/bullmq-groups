@@ -1,0 +1,121 @@
+{
+  "scenario": "throughput",
+  "approach": "delay-gate",
+  "params": {
+    "groups": "1000",
+    "jobs": "20",
+    "concurrency": "50",
+    "workMs": 0,
+    "scenario": "throughput",
+    "approach": "delay-gate"
+  },
+  "env": {
+    "node": "v22.22.3",
+    "bullmq": "5.81.5",
+    "redis": "7.4.10"
+  },
+  "enqueue": {
+    "ms": 756,
+    "jobsPerSec": 26455,
+    "redis": {
+      "commandsPerJob": 9,
+      "callsPerJob": 9,
+      "scriptRunsPerJob": 1,
+      "redisCpuMsPer1kJobs": 23.8,
+      "top": [
+        [
+          "xadd",
+          2
+        ],
+        [
+          "lpush",
+          1
+        ],
+        [
+          "hget",
+          1
+        ],
+        [
+          "hmset",
+          1
+        ],
+        [
+          "incr",
+          1
+        ],
+        [
+          "hmget",
+          1
+        ],
+        [
+          "zadd",
+          1
+        ],
+        [
+          "evalsha",
+          1
+        ]
+      ]
+    }
+  },
+  "memory": {
+    "bytesPerJob": 671,
+    "usedMemoryMB": 14.7,
+    "keys": 20005,
+    "keysPerGroup": 20
+  },
+  "drain": {
+    "finished": true,
+    "ms": 1609,
+    "done": 20000,
+    "jobsPerSec": 12430,
+    "redis": {
+      "commandsPerJob": 29.02,
+      "callsPerJob": 29.02,
+      "scriptRunsPerJob": 3,
+      "redisCpuMsPer1kJobs": 70.6,
+      "top": [
+        [
+          "del",
+          3
+        ],
+        [
+          "evalsha",
+          3
+        ],
+        [
+          "hmget",
+          2
+        ],
+        [
+          "xadd",
+          2
+        ],
+        [
+          "set",
+          2
+        ],
+        [
+          "get",
+          2
+        ],
+        [
+          "hincrby",
+          2
+        ],
+        [
+          "zrangebyscore",
+          1
+        ]
+      ]
+    },
+    "clients": 5,
+    "keysAfter": 1004
+  },
+  "order": {
+    "inversions": 0,
+    "overlaps": 0
+  },
+  "workerRssMB": 172,
+  "approachConnections": 4
+}

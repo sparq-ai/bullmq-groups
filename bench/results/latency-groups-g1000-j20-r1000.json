@@ -1,0 +1,88 @@
+{
+  "scenario": "latency",
+  "approach": "groups",
+  "params": {
+    "groups": "1000",
+    "jobs": 20,
+    "concurrency": "50",
+    "workMs": 5,
+    "scenario": "latency",
+    "approach": "groups",
+    "rate": "1000",
+    "duration": "30",
+    "work": "5"
+  },
+  "env": {
+    "node": "v22.22.3",
+    "bullmq": "5.81.5",
+    "redis": "7.4.10"
+  },
+  "latency": {
+    "finished": true,
+    "sent": 29998,
+    "done": 29998,
+    "offeredRate": 1000,
+    "achievedRate": 1000,
+    "startMs": {
+      "p50": 1,
+      "p95": 2,
+      "p99": 3,
+      "max": 53,
+      "mean": 1.1067071138075872
+    },
+    "endMs": {
+      "p50": 6,
+      "p95": 7,
+      "p99": 9,
+      "max": 59,
+      "mean": 6.091939462630842
+    },
+    "redis": {
+      "commandsPerJob": 96.2,
+      "callsPerJob": 96.2,
+      "scriptRunsPerJob": 6.67,
+      "redisCpuMsPer1kJobs": 438.1,
+      "top": [
+        [
+          "hget",
+          16
+        ],
+        [
+          "evalsha",
+          6.67
+        ],
+        [
+          "hincrby",
+          6
+        ],
+        [
+          "hmget",
+          4.67
+        ],
+        [
+          "xadd",
+          4
+        ],
+        [
+          "hexists",
+          4
+        ],
+        [
+          "zadd",
+          4
+        ],
+        [
+          "hdel",
+          4
+        ]
+      ]
+    },
+    "clients": 7
+  },
+  "order": {
+    "inversions": 0,
+    "overlaps": 0
+  },
+  "workerRssMB": 122,
+  "approachConnections": 6
+}

@@ -1,0 +1,121 @@
+{
+  "scenario": "throughput",
+  "approach": "queue-per-group",
+  "params": {
+    "groups": "1000",
+    "jobs": "20",
+    "concurrency": "50",
+    "workMs": 0,
+    "scenario": "throughput",
+    "approach": "queue-per-group"
+  },
+  "env": {
+    "node": "v22.22.3",
+    "bullmq": "5.81.5",
+    "redis": "7.4.10"
+  },
+  "enqueue": {
+    "ms": 533,
+    "jobsPerSec": 37523,
+    "redis": {
+      "commandsPerJob": 9.1,
+      "callsPerJob": 9.1,
+      "scriptRunsPerJob": 1,
+      "redisCpuMsPer1kJobs": 27,
+      "top": [
+        [
+          "xadd",
+          2
+        ],
+        [
+          "lpush",
+          1
+        ],
+        [
+          "hget",
+          1
+        ],
+        [
+          "hmset",
+          1
+        ],
+        [
+          "incr",
+          1
+        ],
+        [
+          "hmget",
+          1
+        ],
+        [
+          "zadd",
+          1
+        ],
+        [
+          "evalsha",
+          1
+        ]
+      ]
+    }
+  },
+  "memory": {
+    "bytesPerJob": 874,
+    "usedMemoryMB": 18.6,
+    "keys": 25000,
+    "keysPerGroup": 25
+  },
+  "drain": {
+    "finished": true,
+    "ms": 2102,
+    "done": 20000,
+    "jobsPerSec": 9515,
+    "redis": {
+      "commandsPerJob": 23.69,
+      "callsPerJob": 23.69,
+      "scriptRunsPerJob": 1.09,
+      "redisCpuMsPer1kJobs": 76.2,
+      "top": [
+        [
+          "hmget",
+          2.01
+        ],
+        [
+          "xadd",
+          2
+        ],
+        [
+          "del",
+          1.99
+        ],
+        [
+          "hincrby",
+          1.97
+        ],
+        [
+          "evalsha",
+          1.09
+        ],
+        [
+          "set",
+          1.05
+        ],
+        [
+          "zrangebyscore",
+          1.04
+        ],
+        [
+          "rpoplpush",
+          1.04
+        ]
+      ]
+    },
+    "clients": 1002,
+    "keysAfter": 6258
+  },
+  "order": {
+    "inversions": 0,
+    "overlaps": 0
+  },
+  "workerRssMB": 362,
+  "approachConnections": 1001
+}

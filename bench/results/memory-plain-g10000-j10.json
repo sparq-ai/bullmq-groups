@@ -1,0 +1,73 @@
+{
+  "scenario": "memory",
+  "approach": "plain-bullmq",
+  "params": {
+    "scenario": "memory",
+    "approach": "plain",
+    "groups": 10000,
+    "jobs": 10,
+    "concurrency": 50,
+    "workMs": 0
+  },
+  "env": {
+    "node": "v22.22.3",
+    "bullmq": "5.81.5",
+    "redis": "7.4.10"
+  },
+  "enqueue": {
+    "ms": 3417,
+    "jobsPerSec": 29265,
+    "redis": {
+      "commandsPerJob": 9,
+      "callsPerJob": 9,
+      "scriptRunsPerJob": 1,
+      "redisCpuMsPer1kJobs": 23,
+      "top": [
+        [
+          "xadd",
+          2
+        ],
+        [
+          "lpush",
+          1
+        ],
+        [
+          "hget",
+          1
+        ],
+        [
+          "hmset",
+          1
+        ],
+        [
+          "incr",
+          1
+        ],
+        [
+          "hmget",
+          1
+        ],
+        [
+          "zadd",
+          1
+        ],
+        [
+          "evalsha",
+          1
+        ]
+      ]
+    }
+  },
+  "memory": {
+    "bytesPerJob": 629,
+    "usedMemoryMB": 62.2,
+    "keys": 100005,
+    "keysPerGroup": 10
+  },
+  "order": {
+    "inversions": 0,
+    "overlaps": 0
+  },
+  "workerRssMB": 206,
+  "approachConnections": 1
+}

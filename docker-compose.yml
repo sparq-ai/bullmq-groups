@@ -1,0 +1,8 @@
+# Throwaway Redis for tests and benchmarks. Persistence is off so fsync never skews latency numbers.
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: bullmq-groups-redis
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    ports:
+      - "127.0.0.1:6390:6379"
