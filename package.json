@@ -1,6 +1,6 @@
 {
   "name": "bullmq-groups",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Per-group FIFO and fairness for open-source BullMQ: an alternative to BullMQ Pro's groups, with the same API and a NestJS module",
   "keywords": [
     "bullmq",
