@@ -26,6 +26,15 @@ export type GroupRedis = (Redis | Cluster) & {
   [K in `gq_${ScriptName}`]: (metaKey: string, base: string, ...args: (string | number | (string | number)[])[]) => Promise<Reply[]>;
 };
 
+/** An ioredis client, whichever copy of ioredis built it (BullMQ's own check). */
+function isRedisInstance(o: unknown): o is Redis | Cluster {
+  return !!o && ['connect', 'disconnect', 'duplicate'].every(m => typeof (o as Record<string, unknown>)[m] === 'function');
+}
+
+function isCluster(client: Redis | Cluster): client is Cluster {
+  return typeof (client as Cluster).nodes === 'function';
+}
+
 /**
  * A dedicated connection for the group scripts, separate from BullMQ's own connections so the
  * package relies only on BullMQ's public API and works the same on BullMQ 5 and 6.
@@ -37,12 +46,11 @@ export function createGroupRedis(connection: ConnectionOptions | undefined, opts
   const override: Partial<RedisOptions> = opts.worker ? { maxRetriesPerRequest: null } : {};
   connection ??= {}; // as BullMQ: no connection means localhost:6379
   let client: Redis | Cluster;
-  if (connection instanceof IORedis) {
-    client = connection.duplicate(override);
-  } else if (connection instanceof Cluster) {
-    client = connection.duplicate();
-  } else if (typeof (connection as { duplicate?: unknown }).duplicate === 'function') {
-    throw new Error('Pass ioredis options or an ioredis instance; other client types are not supported by bullmq-groups');
+  if (isRedisInstance(connection)) {
+    // Duck-typed, as BullMQ's own isRedisInstance: `instanceof` fails when the app's ioredis is a
+    // second copy (pnpm, or a version that does not dedupe with ours), and BullMQ takes that
+    // instance happily.
+    client = isCluster(connection) ? connection.duplicate() : connection.duplicate(override);
   } else {
     const { url, ...rest } = connection as RedisOptions & { url?: string };
     client = url ? new IORedis(url, { ...rest, ...override }) : new IORedis({ ...rest, ...override });

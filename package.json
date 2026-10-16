@@ -1,7 +1,6 @@
 {
   "name": "bullmq-groups",
   "version": "0.1.0",
-  "private": true,
   "description": "Per-group FIFO and fairness for open-source BullMQ: an alternative to BullMQ Pro's groups, with the same API and a NestJS module",
   "keywords": [
     "bullmq",
@@ -13,7 +12,7 @@
     "redis",
     "nestjs"
   ],
-  "license": "UNLICENSED",
+  "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
@@ -49,13 +48,14 @@
     "test:bullmq": "bash scripts/test-bullmq.sh",
     "test:v6": "bash scripts/test-bullmq.sh 6.3.15",
     "test:min": "bash scripts/test-bullmq.sh 5.40.0",
-    "bench": "tsx bench/run.ts"
+    "bench": "tsx bench/run.ts",
+    "prepublishOnly": "npm run typecheck && npm run build"
   },
   "peerDependencies": {
-    "bullmq": ">=5.40.0 <7",
     "@nestjs/bullmq": ">=10.0.0",
     "@nestjs/common": ">=10.0.0",
-    "@nestjs/core": ">=10.0.0"
+    "@nestjs/core": ">=10.0.0",
+    "bullmq": ">=5.40.0 <7"
   },
   "peerDependenciesMeta": {
     "@nestjs/bullmq": {
@@ -81,5 +81,14 @@
     "rxjs": "7.8.2",
     "tsx": "^4.23.15",
     "typescript": "^5.9.3"
-  }
+  },
+  "author": "Sparq",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sparq-ai/bullmq-groups.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sparq-ai/bullmq-groups/issues"
+  },
+  "homepage": "https://github.com/sparq-ai/bullmq-groups#readme"
 }
