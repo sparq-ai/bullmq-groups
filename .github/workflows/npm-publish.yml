@@ -1,0 +1,72 @@
+name: Publish to NPM
+
+# Publishes when package.json's version is new, as in @sparq/analytics-js and
+# @sparq/search-client. Authentication is npm Trusted Publishing (OIDC): no
+# NPM_TOKEN secret, and NODE_AUTH_TOKEN must stay unset, because npm uses an
+# empty string rather than falling back to OIDC.
+# One-off setup after the first manual publish: npmjs.com -> bullmq-groups ->
+# Settings -> Trusted publisher -> GitHub Actions, owner `sparq-ai`, repository
+# `bullmq-groups`, workflow `npm-publish.yml`, environment `production`.
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  id-token: write # Required for npm provenance (OIDC)
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: production
+    services:
+      redis:
+        image: redis:7-alpine
+        ports: ['6390:6379']
+        options: >-
+          --health-cmd "redis-cli ping" --health-interval 5s --health-timeout 3s --health-retries 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Update npm for OIDC support
+        run: npm install -g npm@latest
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+      - name: Check if version exists on npm
+        id: version-check
+        run: |
+          PACKAGE_NAME=$(node -p "require('./package.json').name")
+          LOCAL_VERSION=$(node -p "require('./package.json').version")
+
+          if npm view "${PACKAGE_NAME}@${LOCAL_VERSION}" version 2>/dev/null; then
+            echo "Version ${LOCAL_VERSION} already exists on npm. Skipping publish."
+            echo "should_publish=false" >> $GITHUB_OUTPUT
+          else
+            echo "Version ${LOCAL_VERSION} is new. Will publish."
+            echo "should_publish=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Publish to NPM
+        if: steps.version-check.outputs.should_publish == 'true'
+        run: npm publish --access=public --provenance
