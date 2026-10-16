@@ -5,6 +5,8 @@ Per-group FIFO and fairness for open-source BullMQ: an alternative to BullMQ Pro
 - **Pro-shaped API.** The inputs and outputs are the same as BullMQ Pro's groups: `queue.add(name, data, { group: { id } })`, `{ group: { concurrency } }` on the worker, `pauseGroup`, `getGroupJobs` and the rest. Code written for one runs on the other with a change of imports. See [Compared with BullMQ Pro](#compared-with-bullmq-pro).
 - **NestJS module.** `bullmq-groups/nestjs` has the same API as `@nestjs/bullmq`: `BullModule.forRoot`, `registerQueue`, `@Processor`, `WorkerHost`, `@InjectQueue`, `@OnWorkerEvent`. An app moves over by changing an import path. See [NestJS](#nestjs).
 
+Not affiliated with or endorsed by Taskforce.sh. BullMQ and BullMQ Pro are theirs; this is an independent package built on open-source BullMQ's public API.
+
 **Status: proof of concept (0.1.0), not yet run in production.** The test suite passes on BullMQ 5.40.0 to 6.3.15. This README covers the API, the design, the guarantees and their limits, and how to run things.
 
 ```ts
