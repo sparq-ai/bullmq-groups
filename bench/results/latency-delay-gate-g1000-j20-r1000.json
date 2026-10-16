@@ -2,15 +2,15 @@
   "scenario": "latency",
   "approach": "delay-gate",
   "params": {
-    "groups": "1000",
-    "jobs": 20,
-    "concurrency": "50",
-    "workMs": 5,
     "scenario": "latency",
     "approach": "delay-gate",
+    "groups": 1000,
     "rate": "1000",
     "duration": "30",
-    "work": "5"
+    "concurrency": 50,
+    "work": "5",
+    "jobs": 20,
+    "workMs": 5
   },
   "env": {
     "node": "v22.22.3",
@@ -19,60 +19,60 @@
   },
   "latency": {
     "finished": true,
-    "sent": 29999,
-    "done": 29999,
+    "sent": 29997,
+    "done": 29997,
     "offeredRate": 1000,
-    "achievedRate": 998,
+    "achievedRate": 1000,
     "startMs": {
       "p50": 1,
       "p95": 2,
       "p99": 3,
-      "max": 147,
-      "mean": 1.3948131604386813
+      "max": 127,
+      "mean": 1.244157749108244
     },
     "endMs": {
       "p50": 6,
       "p95": 7,
-      "p99": 9,
-      "max": 152,
-      "mean": 6.3893796459882
+      "p99": 8,
+      "max": 132,
+      "mean": 6.3786045271193785
     },
     "redis": {
-      "commandsPerJob": 49.72,
-      "callsPerJob": 49.72,
-      "scriptRunsPerJob": 5.44,
-      "redisCpuMsPer1kJobs": 379.4,
+      "commandsPerJob": 49.9,
+      "callsPerJob": 49.9,
+      "scriptRunsPerJob": 5.46,
+      "redisCpuMsPer1kJobs": 395.2,
       "top": [
         [
           "evalsha",
-          5.44
-        ],
-        [
-          "hmget",
-          4.43
+          5.46
         ],
         [
           "del",
-          4.43
+          4.45
+        ],
+        [
+          "hmget",
+          4.45
         ],
         [
           "xadd",
-          4.02
+          4.01
         ],
         [
           "zrangebyscore",
-          2.43
+          2.45
         ],
         [
           "rpoplpush",
-          2.43
+          2.45
         ],
         [
           "zadd",
           2.02
         ],
         [
-          "get",
+          "hget",
           2.01
         ]
       ]
@@ -83,6 +83,6 @@
     "inversions": 0,
     "overlaps": 0
   },
-  "workerRssMB": 147,
+  "workerRssMB": 160,
   "approachConnections": 4
 }

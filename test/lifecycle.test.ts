@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { groupIdOf } from '../src';
-import { Harness, Recorder, assertFifo, keysMatching, sleep, waitFor } from './helpers';
+import { Harness, Recorder, assertFifo, keysMatching, sleep, waitFor, addTo, addBulkTo } from './helpers';
 
 const range = (n: number) => Array.from({ length: n }, (_, i) => i);
 
@@ -9,7 +9,7 @@ test('idle groups leave no keys behind: only the meta hash survives a full drain
   const h = new Harness('cleanup');
   try {
     const q = h.queue({ groupConcurrency: 2 });
-    await q.addBulk(range(5).flatMap(seq => range(100).map(g => ({ groupId: `g${g}`, name: 'n', data: { seq }, opts: { priority: seq % 2 } }))));
+    await addBulkTo(q, range(5).flatMap(seq => range(100).map(g => ({ groupId: `g${g}`, name: 'n', data: { seq }, opts: { priority: seq % 2 } }))));
     assert.ok((await keysMatching(`bull:${h.name}:gq:*`)).length > 100);
     const rec = new Recorder();
     h.worker(async job => {
@@ -45,7 +45,7 @@ test('race between "last job of a group finishes" and "new job arrives": nothing
       const g = `g${Math.floor(Math.random() * 40)}`;
       const seq = next.get(g) ?? 0;
       next.set(g, seq + 1);
-      added.push(q.add(g, 'n', { seq })); // one connection, so scripts run in call order
+      added.push(addTo(q, g, 'n', { seq })); // one connection, so scripts run in call order
       total++;
       if (total % 8 === 0) await sleep(Math.random() * 4);
     }
@@ -67,7 +67,7 @@ test('pause and resume one group while others keep running; a running job finish
   try {
     const q = h.queue({ groupConcurrency: 1 });
     await q.pauseGroup('G');
-    await q.addBulk(range(3).flatMap(seq => ['G', 'H'].map(g => ({ groupId: g, name: 'n', data: { seq } }))));
+    await addBulkTo(q, range(3).flatMap(seq => ['G', 'H'].map(g => ({ groupId: g, name: 'n', data: { seq } }))));
     const rec = new Recorder();
     let gate: () => void = () => undefined;
     const g1Running = new Promise<void>(resolve => (gate = resolve));
@@ -110,16 +110,16 @@ test('delayed jobs join the tail of their group when due', async () => {
   try {
     const q = h.queue({ groupConcurrency: 1 });
     const t0 = Date.now();
-    await q.add('G', 'n', { tag: 'a', sleep: 400 }); // still running when d becomes due
-    await q.add('G', 'n', { tag: 'd' }, { delay: 150 });
+    await addTo(q, 'G', 'n', { tag: 'a', sleep: 400 }); // still running when d becomes due
+    await addTo(q, 'G', 'n', { tag: 'd' }, { delay: 150 });
     const rec: { tag: string; at: number }[] = [];
     h.worker(async job => {
       rec.push({ tag: job.data.tag, at: Date.now() - t0 });
       if (job.data.sleep) await sleep(job.data.sleep);
     }, { delayedPollMs: 50 });
     await sleep(250); // d is due now and waiting behind a
-    await q.add('G', 'n', { tag: 'b' });
-    await q.add('G', 'n', { tag: 'x' }, { delay: 2_000 });
+    await addTo(q, 'G', 'n', { tag: 'b' });
+    await addTo(q, 'G', 'n', { tag: 'x' }, { delay: 2_000 });
     await waitFor(() => rec.length === 3, 'a, d, b');
     assert.deepEqual(rec.map(r => r.tag), ['a', 'd', 'b']);
     assert.ok(rec[1].at >= 400, 'd waited for a');
@@ -136,7 +136,7 @@ test('priority inside a group: no priority first (FIFO), then lower numbers firs
     const q = h.queue({ groupConcurrency: 1 });
     await q.pauseGroup('G');
     const plan: [string, number][] = [['a', 0], ['b', 0], ['c', 2], ['d', 1], ['e', 0], ['f', 1]];
-    for (const [tag, priority] of plan) await q.add('G', 'n', { tag }, { priority });
+    for (const [tag, priority] of plan) await addTo(q, 'G', 'n', { tag }, { priority });
     const order: string[] = [];
     h.worker(async job => {
       order.push(job.data.tag);
@@ -153,16 +153,16 @@ test('adding a job id that is still waiting or running is a no-op; the id is reu
   const h = new Harness('dedupe');
   try {
     const q = h.queue({ groupConcurrency: 1 });
-    await q.add('G', 'n', { v: 0 }); // occupies the group
-    assert.equal((await q.add('G', 'n', { v: 1 }, { jobId: 'sync-shop-1', removeOnComplete: true })).status, 'waiting');
-    assert.equal((await q.add('G', 'n', { v: 2 }, { jobId: 'sync-shop-1', removeOnComplete: true })).status, 'duplicate');
+    await addTo(q, 'G', 'n', { v: 0 }); // occupies the group
+    assert.equal((await addTo(q, 'G', 'n', { v: 1 }, { jobId: 'sync-tenant-1', removeOnComplete: true })).status, 'waiting');
+    assert.equal((await addTo(q, 'G', 'n', { v: 2 }, { jobId: 'sync-tenant-1', removeOnComplete: true })).status, 'duplicate');
     const seen: number[] = [];
     h.worker(async job => {
       seen.push(job.data.v);
     });
     await waitFor(() => seen.length === 2, 'two jobs');
     await waitFor(async () => (await q.getStats()).inflight === 0, 'acks');
-    assert.equal((await q.add('G', 'n', { v: 3 }, { jobId: 'sync-shop-1', removeOnComplete: true })).status, 'waiting');
+    assert.equal((await addTo(q, 'G', 'n', { v: 3 }, { jobId: 'sync-tenant-1', removeOnComplete: true })).status, 'waiting');
     await waitFor(() => seen.length === 3, 'the re-added job');
     assert.deepEqual(seen, [0, 1, 3]);
   } finally {
@@ -174,7 +174,7 @@ test('graceful shutdown mid-drain: running jobs finish, the next job of each gro
   const h = new Harness('shutdown');
   try {
     const q = h.queue({ groupConcurrency: 1 });
-    await q.addBulk(range(4).flatMap(seq => ['G', 'H'].map(g => ({ groupId: g, name: 'n', data: { seq } }))));
+    await addBulkTo(q, range(4).flatMap(seq => ['G', 'H'].map(g => ({ groupId: g, name: 'n', data: { seq } }))));
     const rec = new Recorder();
     const processor = async (job: any) => {
       rec.start(groupIdOf(job)!, job.data.seq);

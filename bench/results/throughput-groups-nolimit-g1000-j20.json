@@ -1,0 +1,121 @@
+{
+  "scenario": "throughput",
+  "approach": "groups-nolimit",
+  "params": {
+    "scenario": "throughput",
+    "approach": "groups-nolimit",
+    "groups": 1000,
+    "jobs": 20,
+    "concurrency": 50,
+    "workMs": 0
+  },
+  "env": {
+    "node": "v22.22.3",
+    "bullmq": "5.81.5",
+    "redis": "7.4.10"
+  },
+  "enqueue": {
+    "ms": 632,
+    "jobsPerSec": 31646,
+    "redis": {
+      "commandsPerJob": 17.25,
+      "callsPerJob": 17.25,
+      "scriptRunsPerJob": 0.05,
+      "redisCpuMsPer1kJobs": 19,
+      "top": [
+        [
+          "hget",
+          5.2
+        ],
+        [
+          "hexists",
+          3.95
+        ],
+        [
+          "hset",
+          1.2
+        ],
+        [
+          "zadd",
+          1.15
+        ],
+        [
+          "hincrby",
+          1.1
+        ],
+        [
+          "lindex",
+          1.05
+        ],
+        [
+          "exists",
+          1.05
+        ],
+        [
+          "sismember",
+          1
+        ]
+      ]
+    }
+  },
+  "memory": {
+    "bytesPerJob": 467,
+    "usedMemoryMB": 12,
+    "keys": 2012,
+    "keysPerGroup": 2.01
+  },
+  "drain": {
+    "finished": true,
+    "ms": 3936,
+    "done": 20000,
+    "jobsPerSec": 5081,
+    "redis": {
+      "commandsPerJob": 82.83,
+      "callsPerJob": 82.83,
+      "scriptRunsPerJob": 4.9,
+      "redisCpuMsPer1kJobs": 189.4,
+      "top": [
+        [
+          "hget",
+          23.7
+        ],
+        [
+          "evalsha",
+          4.9
+        ],
+        [
+          "hincrby",
+          4.9
+        ],
+        [
+          "zadd",
+          4.75
+        ],
+        [
+          "hdel",
+          4
+        ],
+        [
+          "xadd",
+          3.9
+        ],
+        [
+          "hset",
+          3.8
+        ],
+        [
+          "sismember",
+          3
+        ]
+      ]
+    },
+    "clients": 7,
+    "keysAfter": 5
+  },
+  "order": {
+    "inversions": 0,
+    "overlaps": 0
+  },
+  "workerRssMB": 185,
+  "approachConnections": 6
+}

@@ -19,44 +19,48 @@
   },
   "latency": {
     "finished": true,
-    "sent": 89997,
-    "done": 89997,
+    "sent": 89994,
+    "done": 89994,
     "offeredRate": 3000,
     "achievedRate": 2998,
     "startMs": {
-      "p50": 2,
-      "p95": 5,
-      "p99": 9,
-      "max": 74,
-      "mean": 2.322521861839839
+      "p50": 4,
+      "p95": 16,
+      "p99": 26,
+      "max": 120,
+      "mean": 5.522634842322821
     },
     "endMs": {
-      "p50": 7,
-      "p95": 10,
-      "p99": 14,
-      "max": 80,
-      "mean": 7.281309376979233
+      "p50": 9,
+      "p95": 21,
+      "p99": 31,
+      "max": 126,
+      "mean": 10.65323243771807
     },
     "redis": {
-      "commandsPerJob": 89.87,
-      "callsPerJob": 89.87,
-      "scriptRunsPerJob": 5.9,
-      "redisCpuMsPer1kJobs": 225.1,
+      "commandsPerJob": 100.98,
+      "callsPerJob": 100.98,
+      "scriptRunsPerJob": 6.69,
+      "redisCpuMsPer1kJobs": 267.2,
       "top": [
         [
           "hget",
-          16
+          23.99
+        ],
+        [
+          "evalsha",
+          6.69
         ],
         [
           "hincrby",
           6
         ],
         [
-          "evalsha",
-          5.9
+          "zadd",
+          5
         ],
         [
-          "zadd",
+          "time",
           4
         ],
         [
@@ -65,10 +69,6 @@
         ],
         [
           "xadd",
-          4
-        ],
-        [
-          "hdel",
           4
         ],
         [
@@ -83,6 +83,6 @@
     "inversions": 0,
     "overlaps": 0
   },
-  "workerRssMB": 131,
+  "workerRssMB": 190,
   "approachConnections": 6
 }

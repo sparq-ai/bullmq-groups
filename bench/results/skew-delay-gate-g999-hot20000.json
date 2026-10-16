@@ -19,64 +19,64 @@
   },
   "skew": {
     "smallGroupsFinished": true,
-    "smallGroupsDoneMs": 2354,
-    "smallDone": 999,
+    "smallGroupsDoneMs": 2497,
+    "smallDone": 1000,
     "hotDoneMeanwhile": 1,
     "hotJobsPerSec": 0,
     "smallStartMs": {
-      "p50": 2029,
-      "p95": 2341,
-      "p99": 2367,
-      "max": 2374,
-      "mean": 2020.823823823824
+      "p50": 2196,
+      "p95": 2493,
+      "p99": 2514,
+      "max": 2522,
+      "mean": 2187.087087087087
     },
     "redis": {
-      "commandsPerJob": 616.42,
-      "callsPerJob": 616.42,
-      "scriptRunsPerJob": 63.52,
-      "redisCpuMsPer1kJobs": 1769.3,
+      "commandsPerJob": 614.87,
+      "callsPerJob": 614.87,
+      "scriptRunsPerJob": 63.32,
+      "redisCpuMsPer1kJobs": 1873.1,
       "top": [
         [
           "evalsha",
-          63.52
+          63.32
         ],
         [
           "zadd",
-          63.05
+          62.97
         ],
         [
           "xadd",
-          62.35
+          62.19
         ],
         [
           "get",
-          42.34
+          42.21
         ],
         [
           "hget",
-          41.16
+          41.08
         ],
         [
           "hset",
-          40.16
+          40.08
         ],
         [
           "del",
-          23.16
+          23.09
         ],
         [
           "set",
-          22.18
+          22.11
         ]
       ]
     },
     "clients": 5,
-    "wastedPicks": 20181
+    "wastedPicks": 20134
   },
   "order": {
     "inversions": 0,
     "overlaps": 0
   },
-  "workerRssMB": 148,
+  "workerRssMB": 162,
   "approachConnections": 4
 }

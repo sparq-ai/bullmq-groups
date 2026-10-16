@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import IORedis from 'ioredis';
 import { groupIdOf } from '../src';
-import { Harness, Recorder, assertFifo, connection, sleep, waitFor } from './helpers';
+import { Harness, Recorder, assertFifo, connection, sleep, waitFor, addBulkTo } from './helpers';
 
 const range = (n: number) => Array.from({ length: n }, (_, i) => i);
 
@@ -12,7 +12,7 @@ test('every client connection is killed three times mid-run: no job lost, duplic
   try {
     const q = h.queue({ groupConcurrency: 1, reconcileGraceMs: 1_000 });
     q.on('error', () => undefined); // expected while connections are being killed
-    await q.addBulk(range(15).flatMap(seq => range(150).map(g => ({ groupId: `g${g}`, name: 'n', data: { seq } }))));
+    await addBulkTo(q, range(15).flatMap(seq => range(150).map(g => ({ groupId: `g${g}`, name: 'n', data: { seq } }))));
 
     const rec = new Recorder();
     const errors: string[] = [];

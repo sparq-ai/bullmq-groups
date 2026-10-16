@@ -15,24 +15,20 @@
     "redis": "7.4.10"
   },
   "enqueue": {
-    "ms": 4896,
-    "jobsPerSec": 20425,
+    "ms": 4751,
+    "jobsPerSec": 21048,
     "redis": {
       "commandsPerJob": 9.2,
       "callsPerJob": 9.2,
       "scriptRunsPerJob": 1,
-      "redisCpuMsPer1kJobs": 29.3,
+      "redisCpuMsPer1kJobs": 29.5,
       "top": [
         [
           "xadd",
           2
         ],
         [
-          "lpush",
-          1
-        ],
-        [
-          "hget",
+          "zadd",
           1
         ],
         [
@@ -44,11 +40,15 @@
           1
         ],
         [
+          "hget",
+          1
+        ],
+        [
           "hmget",
           1
         ],
         [
-          "zadd",
+          "lpush",
           1
         ],
         [
@@ -59,8 +59,8 @@
     }
   },
   "memory": {
-    "bytesPerJob": 1095,
-    "usedMemoryMB": 107.9,
+    "bytesPerJob": 1096,
+    "usedMemoryMB": 109,
     "keys": 150000,
     "keysPerGroup": 15
   },
@@ -68,6 +68,6 @@
     "inversions": 0,
     "overlaps": 0
   },
-  "workerRssMB": 688,
+  "workerRssMB": 679,
   "approachConnections": 1
 }

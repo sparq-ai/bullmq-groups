@@ -15,24 +15,20 @@
     "redis": "7.4.10"
   },
   "enqueue": {
-    "ms": 677,
-    "jobsPerSec": 8863,
+    "ms": 476,
+    "jobsPerSec": 12605,
     "redis": {
       "commandsPerJob": 10,
       "callsPerJob": 10,
       "scriptRunsPerJob": 1,
-      "redisCpuMsPer1kJobs": 62.4,
+      "redisCpuMsPer1kJobs": 62.5,
       "top": [
         [
           "xadd",
           2
         ],
         [
-          "lpush",
-          1
-        ],
-        [
-          "hget",
+          "zadd",
           1
         ],
         [
@@ -44,11 +40,15 @@
           1
         ],
         [
+          "hget",
+          1
+        ],
+        [
           "hmget",
           1
         ],
         [
-          "zadd",
+          "lpush",
           1
         ],
         [
@@ -59,63 +59,63 @@
     }
   },
   "memory": {
-    "bytesPerJob": 3081,
-    "usedMemoryMB": 19.7,
+    "bytesPerJob": 3045,
+    "usedMemoryMB": 21,
     "keys": 21000,
     "keysPerGroup": 7
   },
   "drain": {
     "finished": true,
-    "ms": 2802,
+    "ms": 3147,
     "done": 6000,
-    "jobsPerSec": 2141,
+    "jobsPerSec": 1907,
     "redis": {
-      "commandsPerJob": 34.2,
-      "callsPerJob": 34.2,
-      "scriptRunsPerJob": 1.95,
-      "redisCpuMsPer1kJobs": 207.2,
+      "commandsPerJob": 39,
+      "callsPerJob": 39,
+      "scriptRunsPerJob": 2.5,
+      "redisCpuMsPer1kJobs": 240.1,
       "top": [
         [
-          "xadd",
-          2.41
+          "del",
+          3
         ],
         [
           "hmget",
-          2.41
+          3
         ],
         [
-          "del",
-          2.36
-        ],
-        [
-          "hincrby",
-          1.95
+          "xadd",
+          2.5
         ],
         [
           "evalsha",
-          1.95
+          2.5
+        ],
+        [
+          "hincrby",
+          2
+        ],
+        [
+          "zrangebyscore",
+          2
+        ],
+        [
+          "rpoplpush",
+          2
         ],
         [
           "info",
           1.5
-        ],
-        [
-          "set",
-          1.5
-        ],
-        [
-          "xtrim",
-          1.45
         ]
       ]
     },
     "clients": 3002,
-    "keysAfter": 13976
+    "keysAfter": 12000
   },
   "order": {
     "inversions": 0,
     "overlaps": 0
   },
-  "workerRssMB": 573,
+  "workerRssMB": 579,
   "approachConnections": 3001
 }

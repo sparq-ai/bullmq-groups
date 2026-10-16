@@ -8,5 +8,5 @@ new GroupWorker(
     process.stdout.write(`started ${job.data.seq}\n`);
     await new Promise(() => undefined); // never finishes
   },
-  { connection: { host: '127.0.0.1', port: Number(port) }, concurrency: 1, lockDuration: 1_000, stalledInterval: 300 },
+  { connection: { host: '127.0.0.1', port: Number(port) }, concurrency: 1, group: { concurrency: 1 }, lockDuration: 1_000, stalledInterval: 300 },
 );

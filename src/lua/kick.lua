@@ -1,22 +1,29 @@
 --[[
-  Reconciler, step 2: walk a slice of the group index and release anything that has capacity.
-  Normally a no-op, because every event that frees capacity releases in the same script. It
-  repairs groups after a default-concurrency change or lost writes (e.g. a Redis failover).
-  ARGV: base, start, count
-  Returns { nextStart, released[], repairedGroups[] }.
+  Reconciler, step 2: release anything the given groups have room for. Normally a no-op, because
+  every event that frees capacity releases in the same script. It repairs groups after lost
+  writes (e.g. a Redis failover) or a default-concurrency change. Once failurePolicy is no longer
+  'block', it also lets go of jobs that still block their group, idle groups included.
+  ARGV: base, then group ids (one ZSCAN page of the group index, read by the caller: a full scan
+  visits every group that waits throughout, however releases reorder the index meanwhile)
+  Returns { released[], repairedGroups[] }.
 ]]
-local start, count = tonumber(ARGV[2]), tonumber(ARGV[3])
-local gids = rcall('ZRANGE', KEY_GROUPS, start, start + count - 1)
 local out, repaired = {}, {}
-for _, gid in ipairs(gids) do
+if policy() ~= 'block' then
+  local blocked = rcall('HKEYS', KEY_BLOCKED)
+  for i = 1, math.min(#blocked, 100) do
+    local before = #out
+    unblockAll(blocked[i], out)
+    if #out > before then
+      repaired[#repaired + 1] = blocked[i]
+    end
+  end
+end
+for i = 2, #ARGV do
+  local gid = ARGV[i]
   local before = #out
   release(gid, out)
   if #out > before then
     repaired[#repaired + 1] = gid
   end
 end
-local nextStart = start + count
-if nextStart >= rcall('ZCARD', KEY_GROUPS) then
-  nextStart = 0
-end
-return {tostring(nextStart), out, repaired}
+return {withPolicy(out), repaired}

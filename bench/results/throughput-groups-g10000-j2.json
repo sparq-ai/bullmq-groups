@@ -15,17 +15,17 @@
     "redis": "7.4.10"
   },
   "enqueue": {
-    "ms": 953,
-    "jobsPerSec": 20986,
+    "ms": 1159,
+    "jobsPerSec": 17256,
     "redis": {
-      "commandsPerJob": 23.51,
-      "callsPerJob": 23.51,
+      "commandsPerJob": 26.51,
+      "callsPerJob": 26.51,
       "scriptRunsPerJob": 0.5,
-      "redisCpuMsPer1kJobs": 34,
+      "redisCpuMsPer1kJobs": 38.9,
       "top": [
         [
           "hget",
-          4.5
+          6
         ],
         [
           "hexists",
@@ -37,7 +37,7 @@
         ],
         [
           "zadd",
-          2
+          2.5
         ],
         [
           "hincrby",
@@ -48,36 +48,40 @@
           1.5
         ],
         [
-          "xadd",
-          1
+          "exists",
+          1.5
         ],
         [
-          "rpush",
+          "sismember",
           1
         ]
       ]
     }
   },
   "memory": {
-    "bytesPerJob": 867,
-    "usedMemoryMB": 18.6,
+    "bytesPerJob": 903,
+    "usedMemoryMB": 20.6,
     "keys": 20011,
     "keysPerGroup": 2
   },
   "drain": {
     "finished": true,
-    "ms": 2273,
+    "ms": 2822,
     "done": 20000,
-    "jobsPerSec": 8799,
+    "jobsPerSec": 7087,
     "redis": {
-      "commandsPerJob": 53.03,
-      "callsPerJob": 53.03,
-      "scriptRunsPerJob": 3,
-      "redisCpuMsPer1kJobs": 112.6,
+      "commandsPerJob": 62.5,
+      "callsPerJob": 62.5,
+      "scriptRunsPerJob": 4,
+      "redisCpuMsPer1kJobs": 138,
       "top": [
         [
           "hget",
-          10
+          15.99
+        ],
+        [
+          "evalsha",
+          4
         ],
         [
           "hincrby",
@@ -88,10 +92,6 @@
           3.5
         ],
         [
-          "evalsha",
-          3
-        ],
-        [
           "xadd",
           3
         ],
@@ -100,22 +100,22 @@
           2.5
         ],
         [
-          "del",
-          2
+          "zadd",
+          2.5
         ],
         [
-          "zadd",
-          2
+          "time",
+          2.5
         ]
       ]
     },
     "clients": 7,
-    "keysAfter": 5
+    "keysAfter": 8
   },
   "order": {
     "inversions": 0,
     "overlaps": 0
   },
-  "workerRssMB": 184,
+  "workerRssMB": 177,
   "approachConnections": 6
 }

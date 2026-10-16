@@ -2,12 +2,12 @@
   "scenario": "throughput",
   "approach": "queue-per-group",
   "params": {
-    "groups": "1000",
-    "jobs": "20",
-    "concurrency": "50",
-    "workMs": 0,
     "scenario": "throughput",
-    "approach": "queue-per-group"
+    "approach": "queue-per-group",
+    "groups": 1000,
+    "jobs": 20,
+    "concurrency": 50,
+    "workMs": 0
   },
   "env": {
     "node": "v22.22.3",
@@ -15,8 +15,8 @@
     "redis": "7.4.10"
   },
   "enqueue": {
-    "ms": 533,
-    "jobsPerSec": 37523,
+    "ms": 577,
+    "jobsPerSec": 34662,
     "redis": {
       "commandsPerJob": 9.1,
       "callsPerJob": 9.1,
@@ -28,11 +28,7 @@
           2
         ],
         [
-          "lpush",
-          1
-        ],
-        [
-          "hget",
+          "zadd",
           1
         ],
         [
@@ -44,11 +40,15 @@
           1
         ],
         [
+          "hget",
+          1
+        ],
+        [
           "hmget",
           1
         ],
         [
-          "zadd",
+          "lpush",
           1
         ],
         [
@@ -59,41 +59,41 @@
     }
   },
   "memory": {
-    "bytesPerJob": 874,
-    "usedMemoryMB": 18.6,
+    "bytesPerJob": 867,
+    "usedMemoryMB": 20,
     "keys": 25000,
     "keysPerGroup": 25
   },
   "drain": {
     "finished": true,
-    "ms": 2102,
+    "ms": 2055,
     "done": 20000,
-    "jobsPerSec": 9515,
+    "jobsPerSec": 9732,
     "redis": {
-      "commandsPerJob": 23.69,
-      "callsPerJob": 23.69,
-      "scriptRunsPerJob": 1.09,
-      "redisCpuMsPer1kJobs": 76.2,
+      "commandsPerJob": 23.35,
+      "callsPerJob": 23.35,
+      "scriptRunsPerJob": 1.07,
+      "redisCpuMsPer1kJobs": 74.1,
       "top": [
         [
           "hmget",
-          2.01
+          1.98
         ],
         [
           "xadd",
-          2
-        ],
-        [
-          "del",
-          1.99
-        ],
-        [
-          "hincrby",
           1.97
         ],
         [
+          "hincrby",
+          1.96
+        ],
+        [
+          "del",
+          1.94
+        ],
+        [
           "evalsha",
-          1.09
+          1.07
         ],
         [
           "set",
@@ -101,21 +101,21 @@
         ],
         [
           "zrangebyscore",
-          1.04
+          1.02
         ],
         [
           "rpoplpush",
-          1.04
+          1.02
         ]
       ]
     },
     "clients": 1002,
-    "keysAfter": 6258
+    "keysAfter": 7083
   },
   "order": {
     "inversions": 0,
     "overlaps": 0
   },
-  "workerRssMB": 362,
+  "workerRssMB": 392,
   "approachConnections": 1001
 }

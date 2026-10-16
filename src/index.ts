@@ -1,18 +1,26 @@
 export { GroupQueue } from './group-queue';
+export type { AddStatus, GroupQueueListener } from './group-queue';
 export { GroupWorker } from './group-worker';
+export type { GroupProcessor, GroupWorkerListener, ReconcileSummary } from './group-worker';
+export { GroupJob } from './group-job';
+export { GroupMaxSizeExceededError, GroupStatus } from './types';
 export type {
-  AddResult,
+  BlockedGroup,
   FailurePolicy,
   GroupCounts,
-  GroupJobOptions,
+  GroupJobsOptions,
+  GroupLag,
   GroupQueueOptions,
   GroupStats,
-  GroupSummary,
   GroupWorkerOptions,
+  JobGroupOptions,
+  RejectedJob,
+  SkippedJob,
   StuckJob,
+  WorkerGroupOptions,
 } from './types';
 
-/** Group id of a job processed by a GroupWorker (same field BullMQ Pro uses). */
+/** Group id of a job (the same field BullMQ Pro uses); undefined for a job added without a group. */
 export function groupIdOf(job: { opts: unknown }): string | undefined {
   return (job.opts as { group?: { id?: string } }).group?.id;
 }

@@ -2,15 +2,15 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { UnrecoverableError } from 'bullmq';
 import { groupIdOf } from '../src';
-import { Harness, Recorder, sleep, waitFor } from './helpers';
+import { Harness, Recorder, sleep, waitFor, addTo } from './helpers';
 
 test('a retrying job holds its group: nothing behind it starts until it succeeds', async () => {
   const h = new Harness('retry-hol');
   try {
     const q = h.queue({ groupConcurrency: 1 });
     const opts = { attempts: 3, backoff: { type: 'fixed', delay: 100 } };
-    for (const seq of [1, 2, 3]) await q.add('G', 'n', { seq }, opts);
-    for (const seq of [1, 2, 3, 4, 5]) await q.add('H', 'n', { seq }, opts);
+    for (const seq of [1, 2, 3]) await addTo(q, 'G', 'n', { seq }, opts);
+    for (const seq of [1, 2, 3, 4, 5]) await addTo(q, 'H', 'n', { seq }, opts);
 
     const rec = new Recorder();
     let failuresLeft = 2;
@@ -36,8 +36,8 @@ test("failurePolicy 'continue': after the last attempt the group moves on and th
   const h = new Harness('fail-continue');
   try {
     const q = h.queue({ groupConcurrency: 1, failurePolicy: 'continue' });
-    const { id: badId } = await q.add('G', 'n', { seq: 1 }, { attempts: 2, backoff: { type: 'fixed', delay: 20 } });
-    await q.add('G', 'n', { seq: 2 });
+    const { id: badId } = await addTo(q, 'G', 'n', { seq: 1 }, { attempts: 2, backoff: { type: 'fixed', delay: 20 } });
+    await addTo(q, 'G', 'n', { seq: 2 });
     const rec = new Recorder();
     h.worker(async job => {
       rec.start('G', job.data.seq);
@@ -46,7 +46,7 @@ test("failurePolicy 'continue': after the last attempt the group moves on and th
     });
     await waitFor(() => rec.done === 1, 'job 2');
     assert.deepEqual(rec.starts.get('G'), [1, 1, 2]);
-    assert.equal(await q.bull.getJobState(badId), 'failed');
+    assert.equal(await q.getJobState(badId), 'failed');
     await waitFor(async () => (await q.getStats()).inflight === 0, 'group to drain');
   } finally {
     await h.close();
@@ -57,9 +57,9 @@ test("failurePolicy 'block': the group stops until an operator retries or skips"
   const h = new Harness('fail-block');
   try {
     const q = h.queue({ groupConcurrency: 1, failurePolicy: 'block' });
-    const { id: badId } = await q.add('G', 'n', { seq: 1 }, { attempts: 1, removeOnFail: true });
-    await q.add('G', 'n', { seq: 2 });
-    await q.add('H', 'n', { seq: 1 });
+    const { id: badId } = await addTo(q, 'G', 'n', { seq: 1 }, { attempts: 1, removeOnFail: true });
+    await addTo(q, 'G', 'n', { seq: 2 });
+    await addTo(q, 'H', 'n', { seq: 1 });
 
     const rec = new Recorder();
     let shouldFail = true;
@@ -77,7 +77,7 @@ test("failurePolicy 'block': the group stops until an operator retries or skips"
     await sleep(200);
     assert.deepEqual(rec.starts.get('G'), [1], 'G:2 must not start while G is blocked');
     // removeOnFail is overridden under 'block' so the job can still be retried.
-    assert.equal(await q.bull.getJobState(badId), 'failed');
+    assert.equal(await q.getJobState(badId), 'failed');
 
     shouldFail = false;
     assert.equal(await q.retryBlockedGroup('G'), badId);
@@ -93,8 +93,8 @@ test("failurePolicy 'block' + skip: the failed job stays failed and the group co
   const h = new Harness('fail-skip');
   try {
     const q = h.queue({ groupConcurrency: 1, failurePolicy: 'block' });
-    const { id: badId } = await q.add('G', 'n', { seq: 1 });
-    await q.add('G', 'n', { seq: 2 });
+    const { id: badId } = await addTo(q, 'G', 'n', { seq: 1 });
+    await addTo(q, 'G', 'n', { seq: 2 });
     const rec = new Recorder();
     h.worker(async job => {
       rec.start('G', job.data.seq);
@@ -105,7 +105,7 @@ test("failurePolicy 'block' + skip: the failed job stays failed and the group co
     assert.equal(await q.skipBlockedGroup('G'), badId);
     await waitFor(() => rec.done === 1, 'G:2');
     assert.deepEqual(rec.starts.get('G'), [1, 2]);
-    assert.equal(await q.bull.getJobState(badId), 'failed');
+    assert.equal(await q.getJobState(badId), 'failed');
   } finally {
     await h.close();
   }
@@ -115,8 +115,8 @@ test('UnrecoverableError ends the job on the first attempt and frees the group',
   const h = new Harness('unrecoverable');
   try {
     const q = h.queue({ groupConcurrency: 1 });
-    await q.add('G', 'n', { seq: 1 }, { attempts: 5 });
-    await q.add('G', 'n', { seq: 2 });
+    await addTo(q, 'G', 'n', { seq: 1 }, { attempts: 5 });
+    await addTo(q, 'G', 'n', { seq: 2 });
     const rec = new Recorder();
     h.worker(async job => {
       rec.start('G', job.data.seq);

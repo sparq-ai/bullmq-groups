@@ -19,26 +19,30 @@
   },
   "skew": {
     "smallGroupsFinished": true,
-    "smallGroupsDoneMs": 603,
+    "smallGroupsDoneMs": 728,
     "smallDone": 999,
     "hotDoneMeanwhile": 2,
     "hotJobsPerSec": 3,
     "smallStartMs": {
-      "p50": 383,
-      "p95": 647,
-      "p99": 669,
-      "max": 677,
-      "mean": 388.84684684684686
+      "p50": 464,
+      "p95": 787,
+      "p99": 815,
+      "max": 817,
+      "mean": 471.04604604604606
     },
     "redis": {
-      "commandsPerJob": 41.3,
-      "callsPerJob": 41.3,
-      "scriptRunsPerJob": 2.03,
-      "redisCpuMsPer1kJobs": 219,
+      "commandsPerJob": 49.31,
+      "callsPerJob": 49.31,
+      "scriptRunsPerJob": 3.03,
+      "redisCpuMsPer1kJobs": 290.8,
       "top": [
         [
           "hget",
-          8.01
+          13.02
+        ],
+        [
+          "evalsha",
+          3.02
         ],
         [
           "hincrby",
@@ -53,10 +57,6 @@
           2.03
         ],
         [
-          "evalsha",
-          2.02
-        ],
-        [
           "del",
           2.02
         ],
@@ -65,8 +65,8 @@
           2.01
         ],
         [
-          "zrangebyscore",
-          1.02
+          "time",
+          2
         ]
       ]
     },
@@ -76,6 +76,6 @@
     "inversions": 0,
     "overlaps": 0
   },
-  "workerRssMB": 124,
+  "workerRssMB": 130,
   "approachConnections": 6
 }

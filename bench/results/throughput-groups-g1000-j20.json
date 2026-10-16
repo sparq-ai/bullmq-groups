@@ -2,12 +2,12 @@
   "scenario": "throughput",
   "approach": "groups",
   "params": {
-    "groups": "1000",
-    "jobs": "20",
-    "concurrency": "50",
-    "workMs": 0,
     "scenario": "throughput",
-    "approach": "groups"
+    "approach": "groups",
+    "groups": 1000,
+    "jobs": 20,
+    "concurrency": 50,
+    "workMs": 0
   },
   "env": {
     "node": "v22.22.3",
@@ -15,17 +15,17 @@
     "redis": "7.4.10"
   },
   "enqueue": {
-    "ms": 384,
-    "jobsPerSec": 52083,
+    "ms": 531,
+    "jobsPerSec": 37665,
     "redis": {
-      "commandsPerJob": 13.15,
-      "callsPerJob": 13.15,
+      "commandsPerJob": 15.25,
+      "callsPerJob": 15.25,
       "scriptRunsPerJob": 0.05,
-      "redisCpuMsPer1kJobs": 13.3,
+      "redisCpuMsPer1kJobs": 15.8,
       "top": [
         [
           "hget",
-          3.15
+          4.2
         ],
         [
           "hexists",
@@ -37,7 +37,7 @@
         ],
         [
           "zadd",
-          1.1
+          1.15
         ],
         [
           "hincrby",
@@ -48,8 +48,8 @@
           1.05
         ],
         [
-          "rpush",
-          1
+          "exists",
+          1.05
         ],
         [
           "sismember",
@@ -59,53 +59,53 @@
     }
   },
   "memory": {
-    "bytesPerJob": 422,
-    "usedMemoryMB": 10.1,
+    "bytesPerJob": 413,
+    "usedMemoryMB": 11.2,
     "keys": 2011,
     "keysPerGroup": 2.01
   },
   "drain": {
     "finished": true,
-    "ms": 2802,
+    "ms": 3708,
     "done": 20000,
-    "jobsPerSec": 7138,
+    "jobsPerSec": 5394,
     "redis": {
-      "commandsPerJob": 62.93,
-      "callsPerJob": 62.93,
-      "scriptRunsPerJob": 3.9,
-      "redisCpuMsPer1kJobs": 138.9,
+      "commandsPerJob": 73.78,
+      "callsPerJob": 73.78,
+      "scriptRunsPerJob": 4.9,
+      "redisCpuMsPer1kJobs": 180.2,
       "top": [
         [
           "hget",
-          11.8
+          18.7
+        ],
+        [
+          "evalsha",
+          4.9
         ],
         [
           "hincrby",
           4.9
         ],
         [
-          "hdel",
-          3.95
+          "zadd",
+          4.75
         ],
         [
-          "evalsha",
-          3.9
+          "hdel",
+          3.95
         ],
         [
           "xadd",
           3.9
         ],
         [
-          "zadd",
-          3.8
-        ],
-        [
           "hmget",
           2.95
         ],
         [
-          "hset",
-          2.85
+          "time",
+          2.95
         ]
       ]
     },
@@ -116,6 +116,6 @@
     "inversions": 0,
     "overlaps": 0
   },
-  "workerRssMB": 177,
+  "workerRssMB": 185,
   "approachConnections": 6
 }

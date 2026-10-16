@@ -19,29 +19,29 @@
   },
   "skew": {
     "smallGroupsFinished": true,
-    "smallGroupsDoneMs": 12269,
+    "smallGroupsDoneMs": 12502,
     "smallDone": 999,
     "hotDoneMeanwhile": 20000,
-    "hotJobsPerSec": 1630,
+    "hotJobsPerSec": 1600,
     "smallStartMs": {
-      "p50": 11991,
-      "p95": 12264,
-      "p99": 12286,
-      "max": 12289,
-      "mean": 11996.822822822824
+      "p50": 12227,
+      "p95": 12487,
+      "p99": 12512,
+      "max": 12525,
+      "mean": 12229.522522522522
     },
     "redis": {
       "commandsPerJob": 23.01,
       "callsPerJob": 23.01,
       "scriptRunsPerJob": 1,
-      "redisCpuMsPer1kJobs": 191.9,
+      "redisCpuMsPer1kJobs": 218.2,
       "top": [
         [
-          "hmget",
+          "del",
           2
         ],
         [
-          "del",
+          "hmget",
           2
         ],
         [
@@ -65,7 +65,7 @@
           1
         ],
         [
-          "xtrim",
+          "hget",
           1
         ]
       ]
@@ -76,6 +76,6 @@
     "inversions": 0,
     "overlaps": 19989
   },
-  "workerRssMB": 146,
+  "workerRssMB": 160,
   "approachConnections": 3
 }

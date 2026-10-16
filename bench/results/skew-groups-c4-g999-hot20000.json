@@ -19,26 +19,30 @@
   },
   "skew": {
     "smallGroupsFinished": true,
-    "smallGroupsDoneMs": 615,
+    "smallGroupsDoneMs": 829,
     "smallDone": 999,
     "hotDoneMeanwhile": 8,
-    "hotJobsPerSec": 13,
+    "hotJobsPerSec": 10,
     "smallStartMs": {
-      "p50": 412,
-      "p95": 665,
-      "p99": 686,
-      "max": 695,
-      "mean": 407.43243243243245
+      "p50": 539,
+      "p95": 887,
+      "p99": 920,
+      "max": 920,
+      "mean": 525.8428428428429
     },
     "redis": {
-      "commandsPerJob": 41.45,
-      "callsPerJob": 41.45,
-      "scriptRunsPerJob": 2.04,
-      "redisCpuMsPer1kJobs": 223.3,
+      "commandsPerJob": 49.47,
+      "callsPerJob": 49.47,
+      "scriptRunsPerJob": 3.04,
+      "redisCpuMsPer1kJobs": 335.5,
       "top": [
         [
           "hget",
-          8.03
+          13.05
+        ],
+        [
+          "evalsha",
+          3.04
         ],
         [
           "hincrby",
@@ -47,10 +51,6 @@
         [
           "hdel",
           3
-        ],
-        [
-          "evalsha",
-          2.04
         ],
         [
           "hmget",
@@ -65,8 +65,8 @@
           2.02
         ],
         [
-          "zrangebyscore",
-          1.03
+          "time",
+          2.01
         ]
       ]
     },
@@ -74,8 +74,8 @@
   },
   "order": {
     "inversions": 0,
-    "overlaps": 9
+    "overlaps": 6
   },
-  "workerRssMB": 129,
+  "workerRssMB": 134,
   "approachConnections": 6
 }

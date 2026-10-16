@@ -19,34 +19,34 @@
   },
   "skew": {
     "smallGroupsFinished": true,
-    "smallGroupsDoneMs": 1015,
+    "smallGroupsDoneMs": 981,
     "smallDone": 999,
     "hotDoneMeanwhile": 2,
     "hotJobsPerSec": 2,
     "smallStartMs": {
-      "p50": 1115,
-      "p95": 1121,
-      "p99": 1123,
-      "max": 1123,
-      "mean": 1084.1591591591591
+      "p50": 1065,
+      "p95": 1072,
+      "p99": 1072,
+      "max": 1072,
+      "mean": 1045.1681681681682
     },
     "redis": {
-      "commandsPerJob": 49.86,
-      "callsPerJob": 49.86,
-      "scriptRunsPerJob": 3.33,
-      "redisCpuMsPer1kJobs": 389.2,
+      "commandsPerJob": 48.89,
+      "callsPerJob": 48.89,
+      "scriptRunsPerJob": 3.19,
+      "redisCpuMsPer1kJobs": 380.8,
       "top": [
         [
-          "evalsha",
-          3.33
-        ],
-        [
           "hmget",
-          3.33
+          3.19
         ],
         [
           "del",
-          3.32
+          3.19
+        ],
+        [
+          "evalsha",
+          3.18
         ],
         [
           "info",
@@ -54,18 +54,18 @@
         ],
         [
           "xadd",
-          2.99
+          3
         ],
         [
           "zrangebyscore",
-          2.33
+          2.19
         ],
         [
           "rpoplpush",
-          2.33
+          2.19
         ],
         [
-          "set",
+          "hincrby",
           2
         ]
       ]
@@ -76,6 +76,6 @@
     "inversions": 0,
     "overlaps": 0
   },
-  "workerRssMB": 390,
+  "workerRssMB": 392,
   "approachConnections": 1001
 }

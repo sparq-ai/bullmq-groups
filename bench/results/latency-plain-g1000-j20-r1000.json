@@ -2,15 +2,15 @@
   "scenario": "latency",
   "approach": "plain-bullmq",
   "params": {
-    "groups": "1000",
-    "jobs": 20,
-    "concurrency": "50",
-    "workMs": 5,
     "scenario": "latency",
     "approach": "plain",
+    "groups": 1000,
     "rate": "1000",
     "duration": "30",
-    "work": "5"
+    "concurrency": 50,
+    "work": "5",
+    "jobs": 20,
+    "workMs": 5
   },
   "env": {
     "node": "v22.22.3",
@@ -19,8 +19,8 @@
   },
   "latency": {
     "finished": true,
-    "sent": 29999,
-    "done": 29999,
+    "sent": 29998,
+    "done": 29998,
     "offeredRate": 1000,
     "achievedRate": 1000,
     "startMs": {
@@ -28,24 +28,24 @@
       "p95": 2,
       "p99": 3,
       "max": 26,
-      "mean": 0.8617287242908097
+      "mean": 0.8474564970998066
     },
     "endMs": {
       "p50": 6,
       "p95": 7,
       "p99": 8,
       "max": 31,
-      "mean": 5.8881629387646255
+      "mean": 6.008933928928595
     },
     "redis": {
-      "commandsPerJob": 44.06,
-      "callsPerJob": 44.06,
-      "scriptRunsPerJob": 3.44,
-      "redisCpuMsPer1kJobs": 356.1,
+      "commandsPerJob": 43.7,
+      "callsPerJob": 43.7,
+      "scriptRunsPerJob": 3.4,
+      "redisCpuMsPer1kJobs": 379.5,
       "top": [
         [
           "hmget",
-          4.44
+          4.4
         ],
         [
           "xadd",
@@ -53,26 +53,26 @@
         ],
         [
           "del",
-          3.44
+          3.4
         ],
         [
           "evalsha",
-          3.43
+          3.4
         ],
         [
           "zrangebyscore",
-          2.44
+          2.4
         ],
         [
           "rpoplpush",
-          2.44
+          2.4
         ],
         [
           "hget",
           2
         ],
         [
-          "hmset",
+          "zadd",
           2
         ]
       ]
@@ -80,9 +80,9 @@
     "clients": 4
   },
   "order": {
-    "inversions": 3,
-    "overlaps": 113
+    "inversions": 1,
+    "overlaps": 119
   },
-  "workerRssMB": 150,
+  "workerRssMB": 157,
   "approachConnections": 3
 }

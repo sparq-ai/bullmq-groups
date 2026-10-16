@@ -27,6 +27,8 @@ export interface RedisSnapshot {
   at: number;
   commands: number;
   calls: Record<string, number>;
+  /** Microseconds Redis spent per command, scripts' inner commands included. */
+  usec: Record<string, number>;
   usedMemory: number;
   cpuMs: number;
   keys: number;
@@ -52,14 +54,17 @@ export async function snapshot(redis: IORedis): Promise<RedisSnapshot> {
     redis.dbsize(),
   ]);
   const calls: Record<string, number> = {};
+  const usec: Record<string, number> = {};
   for (const [k, v] of Object.entries(parseInfo(cmdstats))) {
     calls[k.replace('cmdstat_', '')] = Number(/calls=(\d+)/.exec(v)![1]);
+    usec[k.replace('cmdstat_', '')] = Number(/usec=(\d+)/.exec(v)![1]);
   }
   const c = parseInfo(cpu);
   return {
     at: Date.now(),
     commands: Number(parseInfo(stats).total_commands_processed),
     calls,
+    usec,
     usedMemory: Number(parseInfo(memory).used_memory),
     cpuMs: (Number(c.used_cpu_sys) + Number(c.used_cpu_user)) * 1000,
     keys,
@@ -73,6 +78,8 @@ export interface RedisDelta {
   scriptRuns: number;
   cpuMs: number;
   top: [string, number][];
+  /** Commands Redis spent the most time on: [command, ms]. */
+  topMs: [string, number][];
 }
 
 export function delta(a: RedisSnapshot, b: RedisSnapshot): RedisDelta {
@@ -84,6 +91,11 @@ export function delta(a: RedisSnapshot, b: RedisSnapshot): RedisDelta {
     scriptRuns,
     cpuMs: b.cpuMs - a.cpuMs,
     top: per.filter(([, n]) => n > 0).sort((x, y) => y[1] - x[1]).slice(0, 12),
+    topMs: Object.keys(b.usec)
+      .map(k => [k, (b.usec[k] - (a.usec[k] ?? 0)) / 1000] as [string, number])
+      .filter(([, t]) => t > 0)
+      .sort((x, y) => y[1] - x[1])
+      .slice(0, 8),
   };
 }
 
@@ -111,7 +123,7 @@ export function chunk<T>(items: T[], size: number): T[][] {
   return out;
 }
 
-/** A small, realistic payload: roughly what our sync jobs carry today. */
+/** A small, realistic payload: an external account id and a job kind, as a typical sync job carries. */
 export function payloadFor(job: BenchJob): Record<string, unknown> {
-  return { shopifyId: 7_000_000_000 + Number(job.group.replace(/\D/g, '') || 0), kind: 'product-sync', seq: job.seq, t0: job.t0 };
+  return { accountId: 7_000_000_000 + Number(job.group.replace(/\D/g, '') || 0), kind: 'account-sync', seq: job.seq, t0: job.t0 };
 }

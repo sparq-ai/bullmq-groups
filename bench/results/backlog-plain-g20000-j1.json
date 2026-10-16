@@ -1,0 +1,77 @@
+{
+  "scenario": "backlog",
+  "approach": "plain-bullmq",
+  "params": {
+    "scenario": "backlog",
+    "approach": "plain",
+    "groups": 20000,
+    "jobs": 1,
+    "concurrency": 10,
+    "work": "5000",
+    "workers": "4",
+    "duration": "75",
+    "workMs": 5000
+  },
+  "env": {
+    "node": "v22.22.3",
+    "bullmq": "5.81.5",
+    "redis": "7.4.10"
+  },
+  "backlog": {
+    "durationS": 75,
+    "workers": 4,
+    "done": 560,
+    "waitingInBullmq": 19440,
+    "redisCpuPct": 2.3,
+    "pingMs": {
+      "p50": 0.760921000000053,
+      "p95": 0.9518710000002102,
+      "p99": 1.6963990000003832,
+      "max": 9.536036000000081,
+      "mean": 0.7698707269242304
+    },
+    "lposCalls": 0,
+    "lposMs": 0,
+    "topMs": [
+      [
+        "evalsha",
+        122.083
+      ],
+      [
+        "ping",
+        14.831
+      ],
+      [
+        "xadd",
+        9.419
+      ],
+      [
+        "hgetall",
+        4.629
+      ],
+      [
+        "del",
+        4.444
+      ],
+      [
+        "set",
+        2.143
+      ],
+      [
+        "rpoplpush",
+        2.136
+      ],
+      [
+        "hmget",
+        2.051
+      ]
+    ],
+    "clients": 11
+  },
+  "order": {
+    "inversions": 0,
+    "overlaps": 0
+  },
+  "workerRssMB": 89,
+  "approachConnections": 9
+}

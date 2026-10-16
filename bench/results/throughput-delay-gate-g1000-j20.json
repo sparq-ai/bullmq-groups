@@ -2,12 +2,12 @@
   "scenario": "throughput",
   "approach": "delay-gate",
   "params": {
-    "groups": "1000",
-    "jobs": "20",
-    "concurrency": "50",
-    "workMs": 0,
     "scenario": "throughput",
-    "approach": "delay-gate"
+    "approach": "delay-gate",
+    "groups": 1000,
+    "jobs": 20,
+    "concurrency": 50,
+    "workMs": 0
   },
   "env": {
     "node": "v22.22.3",
@@ -15,24 +15,20 @@
     "redis": "7.4.10"
   },
   "enqueue": {
-    "ms": 756,
-    "jobsPerSec": 26455,
+    "ms": 754,
+    "jobsPerSec": 26525,
     "redis": {
       "commandsPerJob": 9,
       "callsPerJob": 9,
       "scriptRunsPerJob": 1,
-      "redisCpuMsPer1kJobs": 23.8,
+      "redisCpuMsPer1kJobs": 24.5,
       "top": [
         [
           "xadd",
           2
         ],
         [
-          "lpush",
-          1
-        ],
-        [
-          "hget",
+          "zadd",
           1
         ],
         [
@@ -44,11 +40,15 @@
           1
         ],
         [
+          "hget",
+          1
+        ],
+        [
           "hmget",
           1
         ],
         [
-          "zadd",
+          "lpush",
           1
         ],
         [
@@ -59,21 +59,21 @@
     }
   },
   "memory": {
-    "bytesPerJob": 671,
-    "usedMemoryMB": 14.7,
+    "bytesPerJob": 670,
+    "usedMemoryMB": 16,
     "keys": 20005,
     "keysPerGroup": 20
   },
   "drain": {
     "finished": true,
-    "ms": 1609,
+    "ms": 1717,
     "done": 20000,
-    "jobsPerSec": 12430,
+    "jobsPerSec": 11648,
     "redis": {
       "commandsPerJob": 29.02,
       "callsPerJob": 29.02,
       "scriptRunsPerJob": 3,
-      "redisCpuMsPer1kJobs": 70.6,
+      "redisCpuMsPer1kJobs": 75.5,
       "top": [
         [
           "del",
@@ -88,11 +88,11 @@
           2
         ],
         [
-          "xadd",
+          "set",
           2
         ],
         [
-          "set",
+          "xadd",
           2
         ],
         [
@@ -116,6 +116,6 @@
     "inversions": 0,
     "overlaps": 0
   },
-  "workerRssMB": 172,
+  "workerRssMB": 147,
   "approachConnections": 4
 }

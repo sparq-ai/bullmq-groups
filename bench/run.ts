@@ -8,6 +8,8 @@
  *   latency     open loop: add --rate jobs/s for --duration s, measure add -> start latency
  *   skew        one hot group with --hot jobs added first, then --groups one-job groups
  *   memory      preload groups x jobs with no workers; Redis memory and keys per job
+ *   backlog     one slow job per group and few workers, so released jobs wait in BullMQ past the
+ *               reconciler's grace period; measures Redis CPU and latency seen by other clients
  *
  * WARNING: flushes the Redis database at REDIS_HOST:REDIS_PORT (default 127.0.0.1:6390).
  */
@@ -16,6 +18,7 @@ import { join } from 'path';
 import IORedis from 'ioredis';
 import { Approach, BenchJob, BENCH_REDIS, delta, percentiles, sleep, snapshot, waitUntil } from './lib';
 import { plain } from './approaches/plain';
+import { plainDedup } from './approaches/plain-dedup';
 import { groups } from './approaches/groups';
 import { queuePerGroup } from './approaches/queue-per-group';
 import { delayGate } from './approaches/delay-gate';
@@ -37,10 +40,14 @@ function makeApproach(name: string, queueName: string): Approach {
   switch (name) {
     case 'plain':
       return plain(queueName);
+    case 'plain-dedup':
+      return plainDedup(queueName);
     case 'groups':
       return groups(queueName, 1);
     case 'groups-c4':
       return groups(queueName, 4);
+    case 'groups-nolimit':
+      return groups(queueName, null);
     case 'queue-per-group':
       return queuePerGroup(queueName);
     case 'delay-gate':
@@ -201,6 +208,43 @@ async function main() {
       clients: after.clients,
     };
     if ('wastedPicks' in approach) (out.skew as any).wastedPicks = (approach as any).wastedPicks;
+    if ('dropped' in approach) (out.skew as any).dropped = (approach as any).dropped;
+  } else if (scenario === 'backlog') {
+    // Released jobs pile up in BullMQ's wait list for longer than the reconciler's grace period, as
+    // with minutes-long syncs. Several workers each run the reconciler; a probe client measures the
+    // Redis latency everyone else sees.
+    const durationS = num('duration', 75);
+    const nWorkers = num('workers', 4);
+    const jobs = preloadJobs(G, 1);
+    total = jobs.length;
+    await approach.prepare?.([...new Set(jobs.map(j => j.group))]);
+    await approach.enqueue(jobs);
+    for (let i = 0; i < nWorkers; i++) await approach.startWorkers(tracker.processor, C);
+    const probe = new IORedis(BENCH_REDIS);
+    const pings: number[] = [];
+    const before = await snapshot(admin);
+    const started = Date.now();
+    while (Date.now() - started < durationS * 1000) {
+      const t = performance.now();
+      await probe.ping();
+      pings.push(performance.now() - t);
+      await sleep(10);
+    }
+    const after = await snapshot(admin);
+    await probe.quit();
+    const d = delta(before, after);
+    out.backlog = {
+      durationS,
+      workers: nWorkers,
+      done: tracker.done,
+      waitingInBullmq: total - tracker.done,
+      redisCpuPct: +((d.cpuMs / (durationS * 1000)) * 100).toFixed(1),
+      pingMs: percentiles(pings),
+      lposCalls: (after.calls.lpos ?? 0) - (before.calls.lpos ?? 0),
+      lposMs: +(((after.usec.lpos ?? 0) - (before.usec.lpos ?? 0)) / 1000).toFixed(1),
+      topMs: d.topMs,
+      clients: after.clients,
+    };
   } else {
     throw new Error(`unknown scenario ${scenario}`);
   }
@@ -215,7 +259,9 @@ async function main() {
 
   const dir = join(__dirname, 'results');
   mkdirSync(dir, { recursive: true });
-  const label = args.label ?? `${scenario}-${approachName}-g${G}${scenario === 'skew' ? `-hot${args.hot ?? 20000}` : `-j${J}`}${args.rate ? `-r${args.rate}` : ''}`;
+  const label =
+    args.label ??
+    `${scenario}-${approachName}-g${G}${scenario === 'skew' ? `-hot${args.hot ?? 20000}` : `-j${J}`}${args.rate ? `-r${args.rate}` : ''}${args.variant ? `-${args.variant}` : ''}`;
   writeFileSync(join(dir, `${label}.json`), JSON.stringify(out, null, 2));
   console.log(JSON.stringify(out));
   process.exit(0);

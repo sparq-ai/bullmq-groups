@@ -2,12 +2,12 @@
   "scenario": "throughput",
   "approach": "plain-bullmq",
   "params": {
-    "groups": "1000",
-    "jobs": "20",
-    "concurrency": "50",
-    "workMs": 0,
     "scenario": "throughput",
-    "approach": "plain"
+    "approach": "plain",
+    "groups": 1000,
+    "jobs": 20,
+    "concurrency": 50,
+    "workMs": 0
   },
   "env": {
     "node": "v22.22.3",
@@ -15,24 +15,20 @@
     "redis": "7.4.10"
   },
   "enqueue": {
-    "ms": 732,
-    "jobsPerSec": 27322,
+    "ms": 727,
+    "jobsPerSec": 27510,
     "redis": {
       "commandsPerJob": 9,
       "callsPerJob": 9,
       "scriptRunsPerJob": 1,
-      "redisCpuMsPer1kJobs": 23.6,
+      "redisCpuMsPer1kJobs": 22.9,
       "top": [
         [
           "xadd",
           2
         ],
         [
-          "lpush",
-          1
-        ],
-        [
-          "hget",
+          "zadd",
           1
         ],
         [
@@ -44,11 +40,15 @@
           1
         ],
         [
+          "hget",
+          1
+        ],
+        [
           "hmget",
           1
         ],
         [
-          "zadd",
+          "lpush",
           1
         ],
         [
@@ -59,28 +59,28 @@
     }
   },
   "memory": {
-    "bytesPerJob": 662,
-    "usedMemoryMB": 14.5,
+    "bytesPerJob": 661,
+    "usedMemoryMB": 15.7,
     "keys": 20005,
     "keysPerGroup": 20
   },
   "drain": {
     "finished": true,
-    "ms": 1076,
+    "ms": 1037,
     "done": 20000,
-    "jobsPerSec": 18587,
+    "jobsPerSec": 19286,
     "redis": {
       "commandsPerJob": 23.02,
       "callsPerJob": 23.02,
       "scriptRunsPerJob": 1,
-      "redisCpuMsPer1kJobs": 52.4,
+      "redisCpuMsPer1kJobs": 51.2,
       "top": [
         [
-          "hmget",
+          "del",
           2
         ],
         [
-          "del",
+          "hmget",
           2
         ],
         [
@@ -104,7 +104,7 @@
           1
         ],
         [
-          "xtrim",
+          "hget",
           1
         ]
       ]
@@ -116,6 +116,6 @@
     "inversions": 0,
     "overlaps": 0
   },
-  "workerRssMB": 162,
+  "workerRssMB": 156,
   "approachConnections": 3
 }

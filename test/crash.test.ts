@@ -4,7 +4,7 @@ import { spawn } from 'node:child_process';
 import { join } from 'node:path';
 import { Worker } from 'bullmq';
 import { groupIdOf } from '../src';
-import { Harness, Recorder, connection, sleep, waitFor } from './helpers';
+import { Harness, Recorder, connection, sleep, waitFor, addTo } from './helpers';
 
 const fastReconcile = { reconcileGraceMs: 200, reconcileIntervalMs: 100 };
 
@@ -12,7 +12,7 @@ test('worker killed mid-job (SIGKILL): the stalled job re-runs before anything b
   const h = new Harness('sigkill');
   try {
     const q = h.queue({ groupConcurrency: 1 });
-    for (const seq of [1, 2, 3]) await q.add('G', 'n', { seq });
+    for (const seq of [1, 2, 3]) await addTo(q, 'G', 'n', { seq });
 
     const child = spawn(process.execPath, ['--import', 'tsx', join(__dirname, 'fixtures/hanging-worker.ts'), h.name, String(connection.port)], {
       stdio: ['ignore', 'pipe', 'inherit'],
@@ -47,11 +47,11 @@ test('producer dies after releasing a job but before BullMQ got it: the reconcil
   try {
     const crashing = h.queue({ groupConcurrency: 1, reconcileGraceMs: 200 });
     (crashing as any).dispatch = async () => undefined; // simulate dying right after the enqueue script
-    const { id } = await crashing.add('G', 'n', { seq: 1 });
-    assert.equal(await crashing.bull.getJobState(id), 'unknown');
+    const { id } = await addTo(crashing, 'G', 'n', { seq: 1 });
+    assert.equal(await crashing.getJobState(id), 'unknown');
 
     const q = h.queue({ groupConcurrency: 1, reconcileGraceMs: 200 });
-    await q.add('G', 'n', { seq: 2 }); // waits behind the lost job, not ahead of it
+    await addTo(q, 'G', 'n', { seq: 2 }); // waits behind the lost job, not ahead of it
 
     const rec = new Recorder();
     const w = h.worker(async job => {
@@ -78,12 +78,12 @@ test('worker dies after BullMQ completed the job but before the group was told: 
     const h = new Harness(`lost-ack-${removeOnComplete}`);
     try {
       const q = h.queue({ groupConcurrency: 1, reconcileGraceMs: 200 });
-      await q.add('G', 'n', { seq: 1 }, { removeOnComplete });
-      await q.add('G', 'n', { seq: 2 }, { removeOnComplete });
+      await addTo(q, 'G', 'n', { seq: 1 }, { removeOnComplete });
+      await addTo(q, 'G', 'n', { seq: 2 }, { removeOnComplete });
 
       // A plain BullMQ worker finishes G:1 without any group bookkeeping, like a process that died after moveToFinished.
       const plain = new Worker(h.name, async () => undefined, { connection });
-      await waitFor(async () => (await q.bull.getCompletedCount()) === 1 || (await q.bull.getJobCounts()).waiting === 0, 'G:1 to finish');
+      await waitFor(async () => (await q.getCompletedCount()) === 1 || (await q.getJobCounts()).waiting === 0, 'G:1 to finish');
       await plain.close();
       assert.equal((await q.getGroupCounts('G')).waiting, 1, 'G:2 is still held');
 
@@ -106,9 +106,9 @@ test('lost confirmation after a successful add: the reconciler confirms and the 
     const q = h.queue({ groupConcurrency: 1, reconcileGraceMs: 100 });
     const realMarkAdded = q.redis.gq_markAdded.bind(q.redis);
     (q.redis as any).gq_markAdded = async () => 1; // the add reached BullMQ, the confirmation did not
-    const { id } = await q.add('G', 'n', { seq: 1 });
+    const { id } = await addTo(q, 'G', 'n', { seq: 1 });
     (q.redis as any).gq_markAdded = realMarkAdded;
-    assert.equal(await q.bull.getJobState(id), 'waiting');
+    assert.equal(await q.getJobState(id), 'waiting');
 
     const w = h.worker(async () => undefined, { autorun: false, reconcileGraceMs: 100 });
     await sleep(150);
@@ -126,15 +126,15 @@ test('a released job removed by hand (e.g. from a dashboard) frees its group', a
   const h = new Harness('manual-remove');
   try {
     const q = h.queue({ groupConcurrency: 1, reconcileGraceMs: 100 });
-    const { id: first } = await q.add('G', 'n', { seq: 1 });
-    const { id: second } = await q.add('G', 'n', { seq: 2 });
-    await (await q.bull.getJob(first))!.remove();
+    const { id: first } = await addTo(q, 'G', 'n', { seq: 1 });
+    const { id: second } = await addTo(q, 'G', 'n', { seq: 2 });
+    await (await q._bullJob(first))!.remove();
 
     const w = h.worker(async () => undefined, { autorun: false, reconcileGraceMs: 100 });
     await sleep(150);
     const summary = await w.reconcile();
     assert.equal(summary.acked, 1);
-    assert.equal(await q.bull.getJobState(second), 'waiting', 'G:2 released into BullMQ');
+    assert.equal(await q.getJobState(second), 'waiting', 'G:2 released into BullMQ');
   } finally {
     await h.close();
   }
@@ -144,13 +144,14 @@ test('changing the default group concurrency is picked up by the reconciler for 
   const h = new Harness('kick');
   try {
     const q = h.queue({ groupConcurrency: 1 });
-    for (const seq of [1, 2, 3, 4]) await q.add('G', 'n', { seq });
-    assert.equal((await q.bull.getJobCounts()).waiting, 1);
-    await q.redis.hset(`${q.keyBase}meta`, 'concurrency', '3'); // another deployment raised the default
     const w = h.worker(async () => undefined, { autorun: false });
+    await (w.queue as any).ensureConfig(); // the worker has written its group settings
+    for (const seq of [1, 2, 3, 4]) await addTo(q, 'G', 'n', { seq });
+    assert.equal((await q.getJobCounts()).waiting, 1);
+    await q.redis.hset(`${q.keyBase}meta`, 'concurrency', '3'); // another deployment raised the default
     const summary = await w.reconcile();
     assert.deepEqual(summary.repaired, ['G']);
-    assert.equal((await q.bull.getJobCounts()).waiting, 3);
+    assert.equal((await q.getJobCounts()).waiting, 3);
   } finally {
     await h.close();
   }

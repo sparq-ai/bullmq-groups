@@ -15,24 +15,20 @@
     "redis": "7.4.10"
   },
   "enqueue": {
-    "ms": 750,
-    "jobsPerSec": 26667,
+    "ms": 733,
+    "jobsPerSec": 27285,
     "redis": {
       "commandsPerJob": 9,
       "callsPerJob": 9,
       "scriptRunsPerJob": 1,
-      "redisCpuMsPer1kJobs": 23.7,
+      "redisCpuMsPer1kJobs": 23.1,
       "top": [
         [
           "xadd",
           2
         ],
         [
-          "lpush",
-          1
-        ],
-        [
-          "hget",
+          "zadd",
           1
         ],
         [
@@ -44,11 +40,15 @@
           1
         ],
         [
+          "hget",
+          1
+        ],
+        [
           "hmget",
           1
         ],
         [
-          "zadd",
+          "lpush",
           1
         ],
         [
@@ -59,28 +59,28 @@
     }
   },
   "memory": {
-    "bytesPerJob": 659,
-    "usedMemoryMB": 14.5,
+    "bytesPerJob": 656,
+    "usedMemoryMB": 15.7,
     "keys": 20005,
     "keysPerGroup": 2
   },
   "drain": {
     "finished": true,
-    "ms": 1111,
+    "ms": 1075,
     "done": 20000,
-    "jobsPerSec": 18002,
+    "jobsPerSec": 18605,
     "redis": {
       "commandsPerJob": 23.02,
       "callsPerJob": 23.02,
       "scriptRunsPerJob": 1,
-      "redisCpuMsPer1kJobs": 54.4,
+      "redisCpuMsPer1kJobs": 52.8,
       "top": [
         [
-          "hmget",
+          "del",
           2
         ],
         [
-          "del",
+          "hmget",
           2
         ],
         [
@@ -104,7 +104,7 @@
           1
         ],
         [
-          "xtrim",
+          "hget",
           1
         ]
       ]
@@ -116,6 +116,6 @@
     "inversions": 0,
     "overlaps": 0
   },
-  "workerRssMB": 148,
+  "workerRssMB": 160,
   "approachConnections": 3
 }

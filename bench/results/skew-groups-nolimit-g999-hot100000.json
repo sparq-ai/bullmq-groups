@@ -1,0 +1,81 @@
+{
+  "scenario": "skew",
+  "approach": "groups-nolimit",
+  "params": {
+    "scenario": "skew",
+    "approach": "groups-nolimit",
+    "groups": 999,
+    "hot": "100000",
+    "concurrency": 20,
+    "work": "10",
+    "timeout": "300",
+    "jobs": 20,
+    "workMs": 10
+  },
+  "env": {
+    "node": "v22.22.3",
+    "bullmq": "5.81.5",
+    "redis": "7.4.10"
+  },
+  "skew": {
+    "smallGroupsFinished": true,
+    "smallGroupsDoneMs": 747,
+    "smallDone": 999,
+    "hotDoneMeanwhile": 2,
+    "hotJobsPerSec": 3,
+    "smallStartMs": {
+      "p50": 487,
+      "p95": 806,
+      "p99": 835,
+      "max": 846,
+      "mean": 482.2482482482483
+    },
+    "redis": {
+      "commandsPerJob": 59.93,
+      "callsPerJob": 59.93,
+      "scriptRunsPerJob": 3.08,
+      "redisCpuMsPer1kJobs": 309.9,
+      "top": [
+        [
+          "hget",
+          18.16
+        ],
+        [
+          "hdel",
+          4.02
+        ],
+        [
+          "evalsha",
+          3.07
+        ],
+        [
+          "hincrby",
+          3.04
+        ],
+        [
+          "sismember",
+          3.02
+        ],
+        [
+          "hmget",
+          2.05
+        ],
+        [
+          "xadd",
+          2.04
+        ],
+        [
+          "del",
+          2.03
+        ]
+      ]
+    },
+    "clients": 7
+  },
+  "order": {
+    "inversions": 0,
+    "overlaps": 11
+  },
+  "workerRssMB": 144,
+  "approachConnections": 6
+}
