@@ -1,16 +1,16 @@
-# bullmq-groups
+# @sparq/bullmq-groups
 
 Per-group FIFO and fairness for open-source BullMQ: an alternative to BullMQ Pro's groups. Jobs of one group (a tenant, an account, a user) start in the order they were added, at most `n` at a time, and groups take turns, so one busy group can't starve the others.
 
 - **Pro-shaped API.** The inputs and outputs are the same as BullMQ Pro's groups: `queue.add(name, data, { group: { id } })`, `{ group: { concurrency } }` on the worker, `pauseGroup`, `getGroupJobs` and the rest. Code written for one runs on the other with a change of imports. See [Compared with BullMQ Pro](#compared-with-bullmq-pro).
-- **NestJS module.** `bullmq-groups/nestjs` has the same API as `@nestjs/bullmq`: `BullModule.forRoot`, `registerQueue`, `@Processor`, `WorkerHost`, `@InjectQueue`, `@OnWorkerEvent`. An app moves over by changing an import path. See [NestJS](#nestjs).
+- **NestJS module.** `@sparq/bullmq-groups/nestjs` has the same API as `@nestjs/bullmq`: `BullModule.forRoot`, `registerQueue`, `@Processor`, `WorkerHost`, `@InjectQueue`, `@OnWorkerEvent`. An app moves over by changing an import path. See [NestJS](#nestjs).
 
 Not affiliated with or endorsed by Taskforce.sh. BullMQ and BullMQ Pro are theirs; this is an independent package built on open-source BullMQ's public API.
 
 **Status: proof of concept (0.1.0), not yet run in production.** The test suite passes on BullMQ 5.40.0 to 6.3.15. This README covers the API, the design, the guarantees and their limits, and how to run things.
 
 ```ts
-import { GroupQueue, GroupWorker } from 'bullmq-groups';
+import { GroupQueue, GroupWorker } from '@sparq/bullmq-groups';
 
 const connection = { url: process.env.REDIS_URL, maxRetriesPerRequest: null };
 
@@ -39,11 +39,11 @@ A job added without `group` is a plain BullMQ job on the same queue, as with Pro
 
 ### NestJS
 
-Import from `bullmq-groups/nestjs` where you imported from `@nestjs/bullmq`. Nothing else changes: the module, decorators and injection tokens are `@nestjs/bullmq`'s own, as they are in BullMQ Pro's NestJS package.
+Import from `@sparq/bullmq-groups/nestjs` where you imported from `@nestjs/bullmq`. Nothing else changes: the module, decorators and injection tokens are `@nestjs/bullmq`'s own, as they are in BullMQ Pro's NestJS package.
 
 ```ts
 // app.module.ts
-import { BullModule } from 'bullmq-groups/nestjs';
+import { BullModule } from '@sparq/bullmq-groups/nestjs';
 
 @Module({
   imports: [BullModule.forRoot({ connection: { url: process.env.REDIS_URL, maxRetriesPerRequest: null } })],
@@ -58,7 +58,7 @@ export class AppModule {}
 export class AccountModule {}
 
 // account-sync.processor.ts
-import { GroupJob, OnWorkerEvent, Processor, WorkerHost } from 'bullmq-groups/nestjs';
+import { GroupJob, OnWorkerEvent, Processor, WorkerHost } from '@sparq/bullmq-groups/nestjs';
 
 @Processor(QueueNames.ACCOUNT_SYNC, {
   concurrency: 12,
@@ -78,7 +78,7 @@ export class AccountSyncProcessor extends WorkerHost {
 }
 
 // account-sync.service.ts
-import { GroupQueue, InjectQueue } from 'bullmq-groups/nestjs';
+import { GroupQueue, InjectQueue } from '@sparq/bullmq-groups/nestjs';
 
 @Injectable()
 export class AccountSyncService {
@@ -92,7 +92,7 @@ export class AccountSyncService {
 
 Moving an existing queue over:
 
-1. Import `BullModule`, `Processor`, `WorkerHost`, `InjectQueue` and `OnWorkerEvent` from `bullmq-groups/nestjs` instead of `@nestjs/bullmq`. Type injected queues as `GroupQueue` and jobs as `GroupJob`.
+1. Import `BullModule`, `Processor`, `WorkerHost`, `InjectQueue` and `OnWorkerEvent` from `@sparq/bullmq-groups/nestjs` instead of `@nestjs/bullmq`. Type injected queues as `GroupQueue` and jobs as `GroupJob`.
 2. Add `group: { id }` to the `add()` calls that should be grouped, for example with a tenant or user id. Other adds stay plain jobs.
 3. Add `group: { concurrency: n }` to the queue's `@Processor` options, or leave it out for Pro's default (no per-group limit, groups take turns).
 4. Give the queue a new name and let the old one drain: a plain worker must never take a grouped queue's jobs (see [Production settings](#production-settings)).
@@ -124,7 +124,7 @@ Tested:
 | `getGroups`, `getGroupsCount`, `getGroupStatus`, `getGroupsByStatus`, `getGroupsCountByStatus`, `GroupStatus` | Same shapes. `GroupStatus` adds `Blocked`; `Limited` never occurs |
 | `getGroupJobs`, `getGroupJobsCount`, `getGroupsJobsCount`, `getGroupActiveCount`, `getCountsPerPriorityForGroup` | Same |
 | `deleteGroup`, `deleteGroups`, `repairMaxedGroup`, `GroupMaxSizeExceededError` | Same |
-| `@taskforcesh/nestjs-bullmq-pro` | `bullmq-groups/nestjs` |
+| `@taskforcesh/nestjs-bullmq-pro` | `@sparq/bullmq-groups/nestjs` |
 | Group rate limits: `group.limit`, `rateLimitGroup`, `setGroupRateLimit`, `getGroupRateLimitTtl` | **Not supported.** `group.limit` throws |
 | Batches and `groupAffinity`, observables, group meta, sandboxes-for-groups docs | **Not supported** (sandboxed processors do work) |
 | Grouped jobs in flows, repeatable grouped jobs | **Not supported**: rejected at add |

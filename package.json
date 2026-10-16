@@ -1,6 +1,6 @@
 {
-  "name": "bullmq-groups",
-  "version": "0.1.2",
+  "name": "@sparq/bullmq-groups",
+  "version": "0.1.3",
   "description": "Per-group FIFO and fairness for open-source BullMQ: an alternative to BullMQ Pro's groups, with the same API and a NestJS module",
   "keywords": [
     "bullmq",
@@ -90,5 +90,8 @@
   "bugs": {
     "url": "https://github.com/sparq-ai/bullmq-groups/issues"
   },
-  "homepage": "https://github.com/sparq-ai/bullmq-groups#readme"
+  "homepage": "https://github.com/sparq-ai/bullmq-groups#readme",
+  "publishConfig": {
+    "access": "public"
+  }
 }
