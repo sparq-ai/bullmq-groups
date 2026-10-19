@@ -8,6 +8,8 @@ export interface GroupAware {
   _pendingState(jobId: string): Promise<'waiting' | 'prioritized' | 'delayed' | null>;
   /** Remove a job still waiting in its group. False when no group holds it. */
   _removePending(jobId: string): Promise<boolean>;
+  /** A released job was removed from BullMQ before it finished: free its group slot. */
+  _releaseRemoved(jobId: string, nonce: number): Promise<void>;
 }
 
 function groupAware(queue: unknown): GroupAware | undefined {
@@ -40,6 +42,9 @@ export class GroupJob<DataType = any, ReturnType = any, NameType extends string 
   async remove(opts?: { removeChildren?: boolean }): Promise<void> {
     const aware = groupAware(this.queue);
     if (aware && (await aware._removePending(this.id!))) return;
-    return super.remove(opts);
+    await super.remove(opts);
+    // A released job removed before it finished frees its group slot now, not at the reconciler's next check.
+    const nonce = (this.opts.group as { r?: number } | undefined)?.r;
+    if (aware && nonce !== undefined) await aware._releaseRemoved(this.id!, nonce);
   }
 }

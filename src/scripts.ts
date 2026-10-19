@@ -27,7 +27,7 @@ export type GroupRedis = (Redis | Cluster) & {
 };
 
 /** An ioredis client, whichever copy of ioredis built it (BullMQ's own check). */
-function isRedisInstance(o: unknown): o is Redis | Cluster {
+export function isRedisInstance(o: unknown): o is Redis | Cluster {
   return !!o && ['connect', 'disconnect', 'duplicate'].every(m => typeof (o as Record<string, unknown>)[m] === 'function');
 }
 

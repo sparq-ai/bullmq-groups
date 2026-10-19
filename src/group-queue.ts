@@ -2,7 +2,7 @@ import { randomBytes } from 'crypto';
 import { Job, Queue } from 'bullmq';
 import type { Redis } from 'ioredis';
 import type { JobsOptions, ObliterateOpts, QueueListener } from 'bullmq';
-import { bullmqClient, createGroupRedis, GroupRedis, untilReady } from './scripts';
+import { bullmqClient, createGroupRedis, GroupRedis, isRedisInstance, untilReady } from './scripts';
 import { GroupJob } from './group-job';
 import type { GroupAware } from './group-job';
 import { GroupMaxSizeExceededError, GroupStatus } from './types';
@@ -349,10 +349,16 @@ export class GroupQueue<DataType = any, ResultType = any, NameType extends strin
     return raw ? (this.jobFromPayload(jobId, JSON.parse(raw) as Payload) as GroupJob<DataType, ResultType, NameType> & BullJob<DataType, ResultType, NameType>) : undefined;
   }
 
-  /** Remove a job, including one still waiting in its group. Returns 1 when removed, as BullMQ does. */
+  /**
+   * Remove a job, including one still waiting in its group. Returns 1 when removed, as BullMQ does.
+   * Removing a released job that BullMQ holds frees its group slot at once.
+   */
   async remove(jobId: string, opts?: { removeChildren?: boolean }): Promise<number> {
     if (await this._removePending(jobId)) return 1;
-    return super.remove(jobId, opts);
+    const nonce = releaseNonce(await this._bullJob(jobId));
+    const removed = await super.remove(jobId, opts);
+    if (removed === 1 && nonce !== undefined) await this._releaseRemoved(jobId, nonce);
+    return removed;
   }
 
   /** BullMQ's drain, plus every job waiting in a group (and delayed group jobs when `delayed`). */
@@ -363,6 +369,16 @@ export class GroupQueue<DataType = any, ResultType = any, NameType extends strin
     if (delayed) {
       while (Number(await this.redis.gq_remove(this.metaKey, this.keyBase, 'delayed', CHUNK)) === CHUNK);
     }
+    // BullMQ's drain took released jobs with it, and their groups still count them. Have the workers'
+    // reconcilers check every release on their next pass, not at its own (backed-off) check time.
+    const checks = `${this.keyBase}checks`;
+    await this.redis.zunionstore(checks, 1, checks, 'WEIGHTS', 0);
+  }
+
+  /** @internal A released job left BullMQ without finishing (removed by hand): free its group slot now. */
+  async _releaseRemoved(jobId: string, nonce: number): Promise<void> {
+    await this.ensureConfig();
+    await this._ack(jobId, 'removed', nonce);
   }
 
   /** @internal */
@@ -733,6 +749,23 @@ export class GroupQueue<DataType = any, ResultType = any, NameType extends strin
     return this.groupClosing;
   }
 
+  /**
+   * @internal A GroupWorker's close(true): drop the connections at once. In a Redis outage, worker
+   * commands wait forever (maxRetriesPerRequest: null), and a QUIT would queue behind them.
+   */
+  async _forceClose(): Promise<void> {
+    this.groupClosing ??= (async () => {
+      this._redis?.disconnect();
+      // BullMQ's own connection may hold queued commands too. Never touch a connection the app passed in.
+      if (!isRedisInstance(this.opts.connection)) {
+        const client = await Promise.race([bullmqClient(this), new Promise<undefined>(resolve => setTimeout(() => resolve(undefined), 100))]);
+        client?.disconnect();
+      }
+      await Promise.allSettled([super.close()]);
+    })();
+    return this.groupClosing;
+  }
+
   // ---- internals used by GroupWorker and the reconciler ----
 
   /** Emit 'error' only when someone listens: an unhandled 'error' event would crash the process. */
@@ -1010,6 +1043,11 @@ export function configFields(d: NonNullable<GroupQueueOptions['groupDefaults']>)
     set.push('grace', String(d.reconcileGraceMs));
   }
   return { set, del };
+}
+
+/** The release nonce a BullMQ job carries when its group released it, or undefined (a plain job). */
+export function releaseNonce(job: Job | undefined): number | undefined {
+  return (job?.opts as { group?: { r?: number } } | undefined)?.group?.r;
 }
 
 function groupOption(group: unknown): JobGroupOptions {

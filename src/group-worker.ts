@@ -90,9 +90,10 @@ function groupSettings(group: WorkerGroupOptions | undefined, reconcileGraceMs: 
  *  - A small reconciler covers the gaps a crash can leave between BullMQ's scripts and ours
  *    (see README, "Crash windows").
  *
- * The `group` options are written to Redis, so every worker of a queue should use the same ones.
- * A worker created without `group` options starts its group bookkeeping only once its queue has
- * group jobs, so a plain queue pays nothing for it.
+ * The `group` options are written to Redis, so every worker of a queue that declares them should
+ * use the same ones. A worker created without `group` options never writes them: it serves group
+ * jobs by what the queue's other workers wrote, and starts its group bookkeeping only once its
+ * queue has group jobs, so a plain queue pays nothing for it.
  *
  * Extra events: 'stuck', 'blocked', 'repaired', 'skipped', 'rejected' (see GroupWorkerListener).
  */
@@ -105,6 +106,8 @@ export class GroupWorker<DataType = any, ResultType = any, NameType extends stri
   private readonly maint: typeof DEFAULTS;
   private readonly groupConnection: ConnectionOptions;
   private readonly bookkeeping = new Set<Promise<unknown>>();
+  /** Ids of skipped copies, whose 'completed' event is not emitted: their processor never ran. */
+  private readonly skippedCopies = new Set<string>();
   private groupQueue?: GroupQueue<DataType>;
   private reconcileTimer?: NodeJS.Timeout;
   private promoteTimer?: NodeJS.Timeout;
@@ -187,9 +190,22 @@ export class GroupWorker<DataType = any, ResultType = any, NameType extends stri
     return super.run();
   }
 
+  emit<U extends keyof WorkerListener<DataType, ResultType, NameType>>(
+    event: U,
+    ...args: Parameters<WorkerListener<DataType, ResultType, NameType>[U]>
+  ): boolean {
+    if (event === 'completed' && this.skippedCopies.size) {
+      const job = args[0] as Job | undefined;
+      if (job?.id && this.skippedCopies.delete(job.id)) return false;
+    }
+    return super.emit(event, ...args);
+  }
+
   /**
    * Graceful by default: stops the reconciler, lets running jobs finish, then waits for their
    * group bookkeeping, so the next job of each group is already in BullMQ for another worker.
+   * With `force`, it waits for neither and drops the group connection at once (in a Redis outage
+   * the bookkeeping would never finish). Another worker's reconciler completes what it left.
    */
   async close(force = false): Promise<void> {
     this.groupClosing ??= (async () => {
@@ -197,6 +213,10 @@ export class GroupWorker<DataType = any, ResultType = any, NameType extends stri
       clearTimeout(this.promoteTimer);
       clearTimeout(this.probeTimer);
       await super.close(force);
+      if (force) {
+        await this.groupQueue?._forceClose();
+        return;
+      }
       while (this.bookkeeping.size) await Promise.allSettled([...this.bookkeeping]);
       await this.groupQueue?.close();
     })();
@@ -211,6 +231,11 @@ export class GroupWorker<DataType = any, ResultType = any, NameType extends stri
   /** @internal */
   async _removePending(jobId: string): Promise<boolean> {
     return (await this.hasGroups()) ? this.queue._removePending(jobId) : false;
+  }
+
+  /** @internal */
+  async _releaseRemoved(jobId: string, nonce: number): Promise<void> {
+    await this.queue._releaseRemoved(jobId, nonce);
   }
 
   /** The start check (see the class comment). Runs for function and sandboxed processors alike. */
@@ -244,6 +269,10 @@ export class GroupWorker<DataType = any, ResultType = any, NameType extends stri
       await job.moveToDelayed(Date.now() + this.maint.recheckMs, token);
       throw new DelayedError();
     }
+    // A stale or ghost copy: its processor does not run. BullMQ completes it, so remove it on
+    // completion and emit no 'completed' for it (BullMQ's QueueEvents stream still records one).
+    job.opts.removeOnComplete = true;
+    this.skippedCopies.add(job.id!);
     const skipped: SkippedJob = { jobId: job.id!, groupId: group.id, reason: verdict as SkippedJob['reason'] };
     this.emitGroup('skipped', skipped);
     return undefined as ResultType;
@@ -313,7 +342,9 @@ export class GroupWorker<DataType = any, ResultType = any, NameType extends stri
       connection: this.groupConnection,
       prefix: this.opts.prefix,
       worker: true,
-      groupDefaults: this.settings,
+      // Only a worker that declares group options writes them. One without (a second app, or a NestJS
+      // processor without `group`) serves group jobs by what the queue's other workers wrote.
+      groupDefaults: this.declaresGroups ? this.settings : undefined,
     });
     this.groupQueue = queue;
     if (this.opts.maxStalledCount === 0 && !warnedStalledCount) {
