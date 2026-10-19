@@ -332,7 +332,7 @@ src/
   group-queue.ts      GroupQueue: BullMQ Queue + Pro's group methods, admin and observability API
   group-worker.ts     GroupWorker: BullMQ Worker + start check + acks + reconciler + delayed promotion
   group-job.ts        GroupJob: BullMQ Job + gid, state and removal of jobs waiting in a group
-  nestjs/index.ts     @nestjs/bullmq with GroupQueue/GroupWorker (import path bullmq-groups/nestjs)
+  nestjs/index.ts     @nestjs/bullmq with GroupQueue/GroupWorker (import path @sparq/bullmq-groups/nestjs)
   lua/*.lua           enqueue, ack, markAdded, promote, control, lease, kick, claim, remove, status, repair (+ shared helpers)
 test/                 node:test suites, one per concern, plus edge-cases, pro-api and nestjs
 bench/                runner, five approaches, results and report
