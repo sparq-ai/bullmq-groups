@@ -6,9 +6,9 @@ import { spawn } from 'node:child_process';
 import { join } from 'node:path';
 import IORedis, { ReplyError } from 'ioredis';
 import { Queue, UnrecoverableError } from 'bullmq';
-import { GroupQueue, GroupWorker, groupIdOf } from '../src';
+import { GroupJob, GroupQueue, GroupWorker, groupIdOf } from '../src';
 import type { RejectedJob, SkippedJob, StuckJob } from '../src';
-import { Harness, Recorder, connection, sleep, waitFor, addTo, addBulkTo, rawAdd } from './helpers';
+import { Harness, Recorder, connection, sleep, waitFor, addTo, addBulkTo, rawAdd, rawRemove } from './helpers';
 
 const range = (n: number) => Array.from({ length: n }, (_, i) => i);
 const nonceOf = async (q: GroupQueue, jobId: string) => JSON.parse((await q.redis.hget(`${q.keyBase}inflight`, jobId))!).r as number;
@@ -47,6 +47,8 @@ test('a late add that re-creates a job that already ran is skipped by the worker
       runs.push(job.data.seq);
     });
     w.on('skipped', s => skipped.push(s));
+    const completed: string[] = [];
+    w.on('completed', job => completed.push(job.id!));
     const { id } = await addTo(q, 'G', 'n', { seq: 1 }, { removeOnComplete: true });
     await waitFor(async () => runs.length === 1 && (await q.getStats()).inflight === 0, 'G:1 done');
     // The producer's original Queue.add, delayed by a network partition, lands now.
@@ -56,7 +58,48 @@ test('a late add that re-creates a job that already ran is skipped by the worker
     await sleep(100);
     assert.deepEqual(runs, [1, 2], 'G:1 ran once');
     assert.deepEqual(skipped, [{ jobId: id, groupId: 'G', reason: 'ghost' }]);
+    assert.equal(completed.filter(c => c === id).length, 1, "the skipped copy raises no second 'completed'");
+    assert.equal(await q._bullJob(id), undefined, 'the skipped copy is removed from BullMQ');
   } finally {
+    await h.close();
+  }
+});
+
+test("a skipped copy whose completion failed does not hide the 'completed' of a later job with its id", async () => {
+  const h = new Harness('skip-then-reuse');
+  const moveToCompleted = GroupJob.prototype.moveToCompleted;
+  try {
+    const q = h.queue({ groupConcurrency: 1 });
+    const id = 'reused';
+    // The copy's completion fails, as BullMQ's "Missing lock" after a lost lock does: BullMQ emits no 'completed' for it.
+    let failOnce = true;
+    GroupJob.prototype.moveToCompleted = function (this: GroupJob, ...args: Parameters<GroupJob['moveToCompleted']>) {
+      if (failOnce && this.id === id) {
+        failOnce = false;
+        return Promise.reject(new Error(`Missing lock for job ${id}. moveToFinished`));
+      }
+      return moveToCompleted.apply(this, args);
+    };
+    const runs: string[] = [];
+    const skipped: SkippedJob[] = [];
+    const completed: string[] = [];
+    const w = h.worker(async job => void runs.push(job.id!));
+    w.removeAllListeners('error');
+    w.on('error', () => undefined); // the injected Missing lock
+    w.on('skipped', s => skipped.push(s));
+    w.on('completed', job => completed.push(job.id!));
+    await rawAdd(q, 'n', {}, { jobId: id, group: { id: 'G', r: 999 } } as any); // a copy no group released
+    await waitFor(async () => skipped.length === 1 && (await q.getJobState(id)) === 'failed', 'the copy skipped, its completion failed');
+    await rawRemove(q, id);
+
+    // A real job reuses the id. Its 'completed' frees G at once, not at the reconciler's check 30 s later.
+    await q.add('n', {}, { jobId: id, group: { id: 'G' } });
+    await q.add('n', {}, { jobId: 'next', group: { id: 'G' } });
+    await waitFor(() => runs.includes('next'), "G's next job", 3_000);
+    assert.deepEqual(runs, [id, 'next']);
+    assert.deepEqual(completed, [id, 'next']);
+  } finally {
+    GroupJob.prototype.moveToCompleted = moveToCompleted;
     await h.close();
   }
 });
@@ -587,7 +630,7 @@ test('a released job that a plain BullMQ worker ran and removed before the confi
     const nonce = await nonceOf(q, id);
     // An old plain worker took the job and removed it (removeOnComplete) before our confirmation ran.
     await rawAdd(q, 'n', { seq: 1 }, { jobId: id, group: { id: 'G', r: nonce } } as any);
-    await (await q._bullJob(id))!.remove();
+    await rawRemove(q, id);
     await q._markAdded(id, nonce);
     const w = h.worker(async () => undefined, { autorun: false, reconcileGraceMs: 100 });
     await sleep(150);
@@ -641,6 +684,143 @@ test("after switching failurePolicy to 'continue', a blocked group with nothing 
     await waitFor(async () => (await q.getBlockedGroups()).length === 1, 'G blocked');
     await q.redis.hset(`${q.keyBase}meta`, 'failurePolicy', 'continue');
     await waitFor(async () => (await q.getStats()).blockedGroups === 0 && (await q.getGroupCounts('G')).active === 0, 'G released');
+  } finally {
+    await h.close();
+  }
+});
+
+test('a Redis client from another copy of ioredis (pnpm, or a nested install) is accepted, as BullMQ accepts it', async () => {
+  // Load ioredis a second time: an app gets its own copy when its ioredis is not deduplicated with ours.
+  const cached = Object.keys(require.cache).filter(k => /[\\/]node_modules[\\/]ioredis[\\/]/.test(k));
+  const saved = cached.map(k => [k, require.cache[k]] as const);
+  cached.forEach(k => delete require.cache[k]);
+  let OtherIORedis: typeof IORedis;
+  try {
+    OtherIORedis = require('ioredis');
+  } finally {
+    saved.forEach(([k, m]) => (require.cache[k] = m));
+  }
+  const shared = new OtherIORedis({ ...connection, maxRetriesPerRequest: null });
+  assert.equal(shared instanceof IORedis, false, 'a client of a separate ioredis class');
+  const name = `other-ioredis-${process.pid}`;
+  const q = new GroupQueue(name, { connection: shared });
+  const w = new GroupWorker(name, async job => job.gid, { connection: shared, group: { concurrency: 1 } });
+  try {
+    const ran: string[] = [];
+    w.on('completed', (_job, gid) => ran.push(gid));
+    await q.add('n', {}, { group: { id: 'G' } });
+    await waitFor(() => ran.length === 1, 'the grouped job');
+    assert.deepEqual(ran, ['G']);
+  } finally {
+    await w.close();
+    await q.obliterate({ force: true });
+    await q.close();
+    await shared.quit();
+  }
+});
+
+test('a worker without group options does not overwrite the group settings other workers wrote', async () => {
+  const h = new Harness('no-group-options');
+  try {
+    const q = h.queue();
+    const meta = `${q.keyBase}meta`;
+    const rec = new Recorder();
+    const processor = async (job: GroupJob) => {
+      rec.start(job.gid!, job.data.seq);
+      await sleep(20);
+      rec.end(job.gid!, job.data.seq);
+    };
+    h.worker(processor, { group: { concurrency: 1, failurePolicy: 'block' } });
+    await waitFor(async () => (await q.redis.hget(meta, 'concurrency')) === '1', 'the declaring worker wrote its settings');
+    // A second app, or a NestJS processor without `group`, on the same queue.
+    const plain = h.worker(processor, { group: undefined });
+    void plain.queue; // its group side starts, as when its probe finds group state
+    for (let seq = 1; seq <= 8; seq++) await addTo(q, 'G', 'n', { seq });
+    await waitFor(() => rec.done === 8, 'G:1..8');
+    assert.equal(rec.maxActive.get('G'), 1, 'G never ran two jobs at once');
+    assert.deepEqual(rec.starts.get('G'), [1, 2, 3, 4, 5, 6, 7, 8]);
+    assert.equal(await q.redis.hget(meta, 'concurrency'), '1');
+    assert.equal(await q.redis.hget(meta, 'failurePolicy'), 'block');
+  } finally {
+    await h.close();
+  }
+});
+
+test('a worker without group options still writes its reconcileGraceMs, and nothing else', async () => {
+  const h = new Harness('no-group-grace');
+  try {
+    const q = h.queue();
+    const meta = `${q.keyBase}meta`;
+    const w = h.worker(async () => undefined, { group: undefined, reconcileGraceMs: 2_000 });
+    void w.queue; // its group side starts, as when its probe finds group state
+    await waitFor(async () => (await q.redis.hget(meta, 'grace')) === '2000', 'the grace written', 3_000);
+    assert.deepEqual(await q.redis.hmget(meta, 'concurrency', 'failurePolicy'), [null, null]);
+  } finally {
+    await h.close();
+  }
+});
+
+test('removing a released job frees its group slot at once: queue.remove, job.remove and drain', async () => {
+  const h = new Harness('remove-released');
+  try {
+    const q = h.queue({ groupConcurrency: 1 });
+    // No worker: G:1 is released into BullMQ and waits there; G:2 and G:3 wait in the group.
+    const one = await addTo(q, 'G', 'n', { seq: 1 });
+    const two = await addTo(q, 'G', 'n', { seq: 2 });
+    const three = await addTo(q, 'G', 'n', { seq: 3 });
+    await waitFor(async () => (await q._bullJob(one.id)) !== undefined, 'G:1 in BullMQ');
+    assert.equal(await q.remove(one.id), 1);
+    assert.ok(await q._bullJob(two.id), "G:2 released at once, not at the reconciler's next check");
+    await (await q.getJob(two.id))!.remove();
+    assert.ok(await q._bullJob(three.id), 'G:3 released at once after job.remove()');
+    assert.equal((await q.getGroupCounts('G')).active, 1);
+
+    // drain() takes G:3 out of BullMQ with it: every release is due for a reconciler check now.
+    await q.drain();
+    const scores = (await q.redis.zrange(`${q.keyBase}checks`, 0, -1, 'WITHSCORES')).filter((_, i) => i % 2 === 1);
+    assert.ok(scores.length > 0 && scores.every(s => s === '0'), `checks due now, got ${scores}`);
+    const w = h.worker(async () => undefined, { autorun: false });
+    await w.reconcile();
+    assert.equal((await q.getGroupCounts('G')).active, 0, 'G freed on the next reconciler pass');
+    assert.equal((await q.getStats()).inflight, 0);
+  } finally {
+    await h.close();
+  }
+});
+
+test('a removal that succeeded is reported as one when freeing the group slot fails', async () => {
+  const h = new Harness('remove-ack-error');
+  try {
+    const q = h.queue({ groupConcurrency: 1 });
+    const errors: string[] = [];
+    q.on('error', err => errors.push(err.message));
+    // No worker: G:1 and H:1 are released into BullMQ and wait there.
+    const g = await addTo(q, 'G', 'n', { seq: 1 });
+    const hJob = await addTo(q, 'H', 'n', { seq: 1 });
+    await waitFor(async () => !!(await q._bullJob(g.id)) && !!(await q._bullJob(hJob.id)), 'G:1 and H:1 in BullMQ');
+    // A Redis hiccup right after BullMQ removed the job. The reconciler frees the slots later.
+    (q as unknown as { _ack(): Promise<string> })._ack = () => Promise.reject(new Error('Connection is closed.'));
+    assert.equal(await q.remove(g.id), 1);
+    await (await q.getJob(hJob.id))!.remove();
+    assert.equal(await q._bullJob(g.id), undefined);
+    assert.equal(await q._bullJob(hJob.id), undefined);
+    assert.deepEqual(errors, ['Connection is closed.', 'Connection is closed.'], "reported through 'error'");
+  } finally {
+    await h.close();
+  }
+});
+
+test('close(true) returns at once, even with group bookkeeping that never settles (a Redis outage)', async () => {
+  const h = new Harness('force-close');
+  try {
+    const q = h.queue({ groupConcurrency: 1 });
+    const w = h.worker(async () => undefined);
+    await addTo(q, 'G', 'n', { seq: 1 });
+    void w.queue;
+    // To close(), a command stuck in ioredis's offline queue is a promise that never settles.
+    (w as unknown as { track(p: Promise<unknown>): unknown }).track(new Promise(() => undefined));
+    const outcome = await Promise.race([w.close(true).then(() => 'closed'), sleep(3000).then(() => 'hung')]);
+    assert.equal(outcome, 'closed');
   } finally {
     await h.close();
   }

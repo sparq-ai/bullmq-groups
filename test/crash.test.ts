@@ -4,7 +4,7 @@ import { spawn } from 'node:child_process';
 import { join } from 'node:path';
 import { Worker } from 'bullmq';
 import { groupIdOf } from '../src';
-import { Harness, Recorder, connection, sleep, waitFor, addTo } from './helpers';
+import { Harness, Recorder, connection, sleep, waitFor, addTo, rawRemove } from './helpers';
 
 const fastReconcile = { reconcileGraceMs: 200, reconcileIntervalMs: 100 };
 
@@ -128,7 +128,7 @@ test('a released job removed by hand (e.g. from a dashboard) frees its group', a
     const q = h.queue({ groupConcurrency: 1, reconcileGraceMs: 100 });
     const { id: first } = await addTo(q, 'G', 'n', { seq: 1 });
     const { id: second } = await addTo(q, 'G', 'n', { seq: 2 });
-    await (await q._bullJob(first))!.remove();
+    await rawRemove(q, first); // as bull-board removes it: through BullMQ, not this package
 
     const w = h.worker(async () => undefined, { autorun: false, reconcileGraceMs: 100 });
     await sleep(150);
