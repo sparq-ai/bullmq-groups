@@ -132,6 +132,11 @@ export function rawAdd(q: GroupQueue, name: string, data: unknown, opts?: JobsOp
   return Queue.prototype.add.call(q, name, data, opts);
 }
 
+/** Remove a job straight from BullMQ, bypassing groups (as a dashboard or a plain worker would). */
+export function rawRemove(q: GroupQueue, jobId: string) {
+  return Queue.prototype.remove.call(q, jobId);
+}
+
 export async function deleteKeys(pattern: string): Promise<void> {
   const redis = new IORedis(connection);
   let cursor = '0';
