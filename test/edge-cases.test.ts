@@ -65,6 +65,45 @@ test('a late add that re-creates a job that already ran is skipped by the worker
   }
 });
 
+test("a skipped copy whose completion failed does not hide the 'completed' of a later job with its id", async () => {
+  const h = new Harness('skip-then-reuse');
+  const moveToCompleted = GroupJob.prototype.moveToCompleted;
+  try {
+    const q = h.queue({ groupConcurrency: 1 });
+    const id = 'reused';
+    // The copy's completion fails, as BullMQ's "Missing lock" after a lost lock does: BullMQ emits no 'completed' for it.
+    let failOnce = true;
+    GroupJob.prototype.moveToCompleted = function (this: GroupJob, ...args: Parameters<GroupJob['moveToCompleted']>) {
+      if (failOnce && this.id === id) {
+        failOnce = false;
+        return Promise.reject(new Error(`Missing lock for job ${id}. moveToFinished`));
+      }
+      return moveToCompleted.apply(this, args);
+    };
+    const runs: string[] = [];
+    const skipped: SkippedJob[] = [];
+    const completed: string[] = [];
+    const w = h.worker(async job => void runs.push(job.id!));
+    w.removeAllListeners('error');
+    w.on('error', () => undefined); // the injected Missing lock
+    w.on('skipped', s => skipped.push(s));
+    w.on('completed', job => completed.push(job.id!));
+    await rawAdd(q, 'n', {}, { jobId: id, group: { id: 'G', r: 999 } } as any); // a copy no group released
+    await waitFor(async () => skipped.length === 1 && (await q.getJobState(id)) === 'failed', 'the copy skipped, its completion failed');
+    await rawRemove(q, id);
+
+    // A real job reuses the id. Its 'completed' frees G at once, not at the reconciler's check 30 s later.
+    await q.add('n', {}, { jobId: id, group: { id: 'G' } });
+    await q.add('n', {}, { jobId: 'next', group: { id: 'G' } });
+    await waitFor(() => runs.includes('next'), "G's next job", 3_000);
+    assert.deepEqual(runs, [id, 'next']);
+    assert.deepEqual(completed, [id, 'next']);
+  } finally {
+    GroupJob.prototype.moveToCompleted = moveToCompleted;
+    await h.close();
+  }
+});
+
 test('reconciler: an add that lands between its BullMQ read and its repair is not acked as removed', async () => {
   const h = new Harness('late-confirm');
   try {
@@ -707,6 +746,20 @@ test('a worker without group options does not overwrite the group settings other
   }
 });
 
+test('a worker without group options still writes its reconcileGraceMs, and nothing else', async () => {
+  const h = new Harness('no-group-grace');
+  try {
+    const q = h.queue();
+    const meta = `${q.keyBase}meta`;
+    const w = h.worker(async () => undefined, { group: undefined, reconcileGraceMs: 2_000 });
+    void w.queue; // its group side starts, as when its probe finds group state
+    await waitFor(async () => (await q.redis.hget(meta, 'grace')) === '2000', 'the grace written', 3_000);
+    assert.deepEqual(await q.redis.hmget(meta, 'concurrency', 'failurePolicy'), [null, null]);
+  } finally {
+    await h.close();
+  }
+});
+
 test('removing a released job frees its group slot at once: queue.remove, job.remove and drain', async () => {
   const h = new Harness('remove-released');
   try {
@@ -730,6 +783,28 @@ test('removing a released job frees its group slot at once: queue.remove, job.re
     await w.reconcile();
     assert.equal((await q.getGroupCounts('G')).active, 0, 'G freed on the next reconciler pass');
     assert.equal((await q.getStats()).inflight, 0);
+  } finally {
+    await h.close();
+  }
+});
+
+test('a removal that succeeded is reported as one when freeing the group slot fails', async () => {
+  const h = new Harness('remove-ack-error');
+  try {
+    const q = h.queue({ groupConcurrency: 1 });
+    const errors: string[] = [];
+    q.on('error', err => errors.push(err.message));
+    // No worker: G:1 and H:1 are released into BullMQ and wait there.
+    const g = await addTo(q, 'G', 'n', { seq: 1 });
+    const hJob = await addTo(q, 'H', 'n', { seq: 1 });
+    await waitFor(async () => !!(await q._bullJob(g.id)) && !!(await q._bullJob(hJob.id)), 'G:1 and H:1 in BullMQ');
+    // A Redis hiccup right after BullMQ removed the job. The reconciler frees the slots later.
+    (q as unknown as { _ack(): Promise<string> })._ack = () => Promise.reject(new Error('Connection is closed.'));
+    assert.equal(await q.remove(g.id), 1);
+    await (await q.getJob(hJob.id))!.remove();
+    assert.equal(await q._bullJob(g.id), undefined);
+    assert.equal(await q._bullJob(hJob.id), undefined);
+    assert.deepEqual(errors, ['Connection is closed.', 'Connection is closed.'], "reported through 'error'");
   } finally {
     await h.close();
   }

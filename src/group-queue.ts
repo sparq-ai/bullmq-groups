@@ -377,8 +377,13 @@ export class GroupQueue<DataType = any, ResultType = any, NameType extends strin
 
   /** @internal A released job left BullMQ without finishing (removed by hand): free its group slot now. */
   async _releaseRemoved(jobId: string, nonce: number): Promise<void> {
-    await this.ensureConfig();
-    await this._ack(jobId, 'removed', nonce);
+    try {
+      await this.ensureConfig();
+      await this._ack(jobId, 'removed', nonce);
+    } catch (err) {
+      // The job is already gone from BullMQ, so the removal stands. The reconciler frees the slot instead.
+      this._error(err);
+    }
   }
 
   /** @internal */

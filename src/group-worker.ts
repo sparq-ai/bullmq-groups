@@ -106,8 +106,12 @@ export class GroupWorker<DataType = any, ResultType = any, NameType extends stri
   private readonly maint: typeof DEFAULTS;
   private readonly groupConnection: ConnectionOptions;
   private readonly bookkeeping = new Set<Promise<unknown>>();
-  /** Ids of skipped copies, whose 'completed' event is not emitted: their processor never ran. */
-  private readonly skippedCopies = new Set<string>();
+  /**
+   * Skipped copies, whose 'completed' event is not emitted: their processor never ran. Keyed by the Job
+   * object BullMQ hands the processor and then emits, not by id: a copy whose completion fails never
+   * emits 'completed', and a later job with its id must still emit one.
+   */
+  private readonly skippedCopies = new WeakSet<Job>();
   private groupQueue?: GroupQueue<DataType>;
   private reconcileTimer?: NodeJS.Timeout;
   private promoteTimer?: NodeJS.Timeout;
@@ -194,10 +198,7 @@ export class GroupWorker<DataType = any, ResultType = any, NameType extends stri
     event: U,
     ...args: Parameters<WorkerListener<DataType, ResultType, NameType>[U]>
   ): boolean {
-    if (event === 'completed' && this.skippedCopies.size) {
-      const job = args[0] as Job | undefined;
-      if (job?.id && this.skippedCopies.delete(job.id)) return false;
-    }
+    if (event === 'completed' && this.skippedCopies.delete(args[0] as Job)) return false;
     return super.emit(event, ...args);
   }
 
@@ -272,7 +273,7 @@ export class GroupWorker<DataType = any, ResultType = any, NameType extends stri
     // A stale or ghost copy: its processor does not run. BullMQ completes it, so remove it on
     // completion and emit no 'completed' for it (BullMQ's QueueEvents stream still records one).
     job.opts.removeOnComplete = true;
-    this.skippedCopies.add(job.id!);
+    this.skippedCopies.add(job);
     const skipped: SkippedJob = { jobId: job.id!, groupId: group.id, reason: verdict as SkippedJob['reason'] };
     this.emitGroup('skipped', skipped);
     return undefined as ResultType;
@@ -338,13 +339,15 @@ export class GroupWorker<DataType = any, ResultType = any, NameType extends stri
   /** Create the group side: writes this worker's group settings and, if running, starts the maintenance loops. */
   private activate(): GroupQueue<DataType> {
     if (this.groupQueue) return this.groupQueue;
+    const { reconcileGraceMs } = this.settings;
     const queue = new GroupQueue<DataType>(this.name, {
       connection: this.groupConnection,
       prefix: this.opts.prefix,
       worker: true,
       // Only a worker that declares group options writes them. One without (a second app, or a NestJS
       // processor without `group`) serves group jobs by what the queue's other workers wrote.
-      groupDefaults: this.declaresGroups ? this.settings : undefined,
+      // reconcileGraceMs is a worker option of its own, so it is written whenever it is given.
+      groupDefaults: this.declaresGroups ? this.settings : reconcileGraceMs === undefined ? undefined : { reconcileGraceMs },
     });
     this.groupQueue = queue;
     if (this.opts.maxStalledCount === 0 && !warnedStalledCount) {
