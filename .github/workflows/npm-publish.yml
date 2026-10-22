@@ -4,7 +4,7 @@ name: Publish to NPM
 # @sparq/search-client. Authentication is npm Trusted Publishing (OIDC): no
 # NPM_TOKEN secret, and NODE_AUTH_TOKEN must stay unset, because npm uses an
 # empty string rather than falling back to OIDC.
-# One-off setup after the first manual publish: npmjs.com -> bullmq-groups ->
+# One-off setup after the first manual publish: npmjs.com -> @sparq/bullmq-groups ->
 # Settings -> Trusted publisher -> GitHub Actions, owner `sparq-ai`, repository
 # `bullmq-groups`, workflow `npm-publish.yml`, environment `production`.
 
