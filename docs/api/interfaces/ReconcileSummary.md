@@ -6,7 +6,7 @@
 
 # Interface: ReconcileSummary
 
-Defined in: [src/group-worker.ts:34](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-worker.ts#L34)
+Defined in: [src/group-worker.ts:34](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-worker.ts#L34)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [src/group-worker.ts:34](https://github.com/sparq-ai/bullmq-groups/b
 checked: number;
 ```
 
-Defined in: [src/group-worker.ts:35](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-worker.ts#L35)
+Defined in: [src/group-worker.ts:35](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-worker.ts#L35)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [src/group-worker.ts:35](https://github.com/sparq-ai/bullmq-groups/b
 acked: number;
 ```
 
-Defined in: [src/group-worker.ts:36](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-worker.ts#L36)
+Defined in: [src/group-worker.ts:36](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-worker.ts#L36)
 
 ***
 
@@ -36,7 +36,7 @@ Defined in: [src/group-worker.ts:36](https://github.com/sparq-ai/bullmq-groups/b
 redispatched: number;
 ```
 
-Defined in: [src/group-worker.ts:37](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-worker.ts#L37)
+Defined in: [src/group-worker.ts:37](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-worker.ts#L37)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: [src/group-worker.ts:37](https://github.com/sparq-ai/bullmq-groups/b
 confirmed: number;
 ```
 
-Defined in: [src/group-worker.ts:38](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-worker.ts#L38)
+Defined in: [src/group-worker.ts:38](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-worker.ts#L38)
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: [src/group-worker.ts:38](https://github.com/sparq-ai/bullmq-groups/b
 stuck: StuckJob[];
 ```
 
-Defined in: [src/group-worker.ts:39](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-worker.ts#L39)
+Defined in: [src/group-worker.ts:39](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-worker.ts#L39)
 
 ***
 
@@ -66,4 +66,4 @@ Defined in: [src/group-worker.ts:39](https://github.com/sparq-ai/bullmq-groups/b
 repaired: string[];
 ```
 
-Defined in: [src/group-worker.ts:40](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-worker.ts#L40)
+Defined in: [src/group-worker.ts:40](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-worker.ts#L40)

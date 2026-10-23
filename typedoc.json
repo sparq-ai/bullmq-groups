@@ -1,7 +1,11 @@
 {
   "$schema": "https://typedoc.org/schema.json",
-  "plugin": ["typedoc-plugin-markdown"],
-  "entryPoints": ["src/index.ts"],
+  "plugin": [
+    "typedoc-plugin-markdown"
+  ],
+  "entryPoints": [
+    "src/index.ts"
+  ],
   "tsconfig": "tsconfig.build.json",
   "out": "docs/api",
   "readme": "none",
@@ -11,12 +15,15 @@
   "excludeExternals": true,
   "githubPages": false,
   "hideGenerator": true,
-  "sort": ["source-order"],
+  "sort": [
+    "source-order"
+  ],
   "entryFileName": "README.md",
   "mergeReadme": false,
   "useCodeBlocks": true,
   "expandObjects": true,
   "parametersFormat": "table",
   "enumMembersFormat": "table",
-  "typeDeclarationFormat": "table"
+  "typeDeclarationFormat": "table",
+  "gitRevision": "main"
 }

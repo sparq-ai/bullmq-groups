@@ -10,7 +10,7 @@
 type GroupProcessor<DataType, ResultType, NameType> = (job, token?, signal?) => Promise<ResultType>;
 ```
 
-Defined in: [src/group-worker.ts:44](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-worker.ts#L44)
+Defined in: [src/group-worker.ts:44](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-worker.ts#L44)
 
 A processor function, as BullMQ's, with the job typed as a GroupJob (job.gid, job.opts.group), as WorkerPro's ProcessorPro.
 

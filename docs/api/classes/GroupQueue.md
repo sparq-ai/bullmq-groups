@@ -6,7 +6,7 @@
 
 # Class: GroupQueue\<DataType, ResultType, NameType\>
 
-Defined in: [src/group-queue.ts:113](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L113)
+Defined in: [src/group-queue.ts:113](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L113)
 
 A BullMQ queue with groups, shaped like BullMQ Pro's QueuePro.
 
@@ -50,7 +50,7 @@ new GroupQueue<DataType, ResultType, NameType>(
 ): GroupQueue<DataType, ResultType, NameType>;
 ```
 
-Defined in: [src/group-queue.ts:126](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L126)
+Defined in: [src/group-queue.ts:126](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L126)
 
 #### Parameters
 
@@ -76,7 +76,7 @@ Defined in: [src/group-queue.ts:126](https://github.com/sparq-ai/bullmq-groups/b
 readonly keyBase: string;
 ```
 
-Defined in: [src/group-queue.ts:117](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L117)
+Defined in: [src/group-queue.ts:117](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L117)
 
 ## Accessors
 
@@ -88,7 +88,7 @@ Defined in: [src/group-queue.ts:117](https://github.com/sparq-ai/bullmq-groups/b
 get redis(): GroupRedis;
 ```
 
-Defined in: [src/group-queue.ts:178](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L178)
+Defined in: [src/group-queue.ts:178](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L178)
 
 The connection for the group scripts, opened on first use, so a queue that never sees a
 grouped job costs nothing extra. Separate from BullMQ's connections so the package relies only
@@ -108,7 +108,7 @@ on BullMQ's public API and works the same on BullMQ 5 and 6.
 on<U>(event, listener): this;
 ```
 
-Defined in: [src/group-queue.ts:143](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L143)
+Defined in: [src/group-queue.ts:143](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L143)
 
 ##### Type Parameters
 
@@ -137,7 +137,7 @@ Defined in: [src/group-queue.ts:143](https://github.com/sparq-ai/bullmq-groups/b
 on<U>(event, listener): this;
 ```
 
-Defined in: [src/group-queue.ts:147](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L147)
+Defined in: [src/group-queue.ts:147](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L147)
 
 ##### Type Parameters
 
@@ -166,7 +166,7 @@ Defined in: [src/group-queue.ts:147](https://github.com/sparq-ai/bullmq-groups/b
 on(event, listener): this;
 ```
 
-Defined in: [src/group-queue.ts:148](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L148)
+Defined in: [src/group-queue.ts:148](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L148)
 
 ##### Parameters
 
@@ -193,7 +193,7 @@ Defined in: [src/group-queue.ts:148](https://github.com/sparq-ai/bullmq-groups/b
 once<U>(event, listener): this;
 ```
 
-Defined in: [src/group-queue.ts:153](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L153)
+Defined in: [src/group-queue.ts:153](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L153)
 
 ##### Type Parameters
 
@@ -222,7 +222,7 @@ Defined in: [src/group-queue.ts:153](https://github.com/sparq-ai/bullmq-groups/b
 once<U>(event, listener): this;
 ```
 
-Defined in: [src/group-queue.ts:157](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L157)
+Defined in: [src/group-queue.ts:157](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L157)
 
 ##### Type Parameters
 
@@ -251,7 +251,7 @@ Defined in: [src/group-queue.ts:157](https://github.com/sparq-ai/bullmq-groups/b
 once(event, listener): this;
 ```
 
-Defined in: [src/group-queue.ts:158](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L158)
+Defined in: [src/group-queue.ts:158](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L158)
 
 ##### Parameters
 
@@ -278,7 +278,7 @@ Defined in: [src/group-queue.ts:158](https://github.com/sparq-ai/bullmq-groups/b
 off<U>(event, listener): this;
 ```
 
-Defined in: [src/group-queue.ts:163](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L163)
+Defined in: [src/group-queue.ts:163](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L163)
 
 ##### Type Parameters
 
@@ -307,7 +307,7 @@ Defined in: [src/group-queue.ts:163](https://github.com/sparq-ai/bullmq-groups/b
 off<U>(event, listener): this;
 ```
 
-Defined in: [src/group-queue.ts:167](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L167)
+Defined in: [src/group-queue.ts:167](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L167)
 
 ##### Type Parameters
 
@@ -336,7 +336,7 @@ Defined in: [src/group-queue.ts:167](https://github.com/sparq-ai/bullmq-groups/b
 off(event, listener): this;
 ```
 
-Defined in: [src/group-queue.ts:168](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L168)
+Defined in: [src/group-queue.ts:168](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L168)
 
 ##### Parameters
 
@@ -365,7 +365,7 @@ add(
 ): Promise<GroupJob<DataType, ResultType, NameType>>;
 ```
 
-Defined in: [src/group-queue.ts:220](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L220)
+Defined in: [src/group-queue.ts:220](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L220)
 
 Add a job. With `opts.group` it joins the tail of its group and runs once the group has room
 (BullMQ Pro's QueuePro.add); without, it is a plain BullMQ job.
@@ -395,7 +395,7 @@ Throws GroupMaxSizeExceededError when group.maxSize is set and reached.
 addBulk(jobs): Promise<GroupJob<DataType, ResultType, NameType>[]>;
 ```
 
-Defined in: [src/group-queue.ts:239](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L239)
+Defined in: [src/group-queue.ts:239](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L239)
 
 Add many jobs, grouped and plain mixed. Jobs of the same group keep their order in the array.
 Every grouped job is checked first (including BullMQ's own option checks), so an invalid job
@@ -431,7 +431,7 @@ getJob(jobId): Promise<
 | undefined>;
 ```
 
-Defined in: [src/group-queue.ts:345](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L345)
+Defined in: [src/group-queue.ts:345](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L345)
 
 A job in BullMQ, or one still waiting in its group.
 
@@ -459,7 +459,7 @@ A job in BullMQ, or one still waiting in its group.
 remove(jobId, opts?): Promise<number>;
 ```
 
-Defined in: [src/group-queue.ts:356](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L356)
+Defined in: [src/group-queue.ts:356](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L356)
 
 Remove a job, including one still waiting in its group. Returns 1 when removed, as BullMQ does.
 Removing a released job that BullMQ holds frees its group slot at once.
@@ -488,7 +488,7 @@ Removing a released job that BullMQ holds frees its group slot at once.
 drain(delayed?): Promise<void>;
 ```
 
-Defined in: [src/group-queue.ts:365](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L365)
+Defined in: [src/group-queue.ts:365](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L365)
 
 BullMQ's drain, plus every job waiting in a group (and delayed group jobs when `delayed`).
 
@@ -514,7 +514,7 @@ BullMQ's drain, plus every job waiting in a group (and delayed group jobs when `
 pauseGroup(groupId): Promise<boolean>;
 ```
 
-Defined in: [src/group-queue.ts:416](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L416)
+Defined in: [src/group-queue.ts:416](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L416)
 
 Stop starting jobs of this group, on every worker. Running jobs finish; released jobs that have
 not started wait for resume. Works for a group that has no jobs yet. False if it was already paused.
@@ -537,7 +537,7 @@ not started wait for resume. Works for a group that has no jobs yet. False if it
 resumeGroup(groupId): Promise<boolean>;
 ```
 
-Defined in: [src/group-queue.ts:422](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L422)
+Defined in: [src/group-queue.ts:422](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L422)
 
 False if the group was not paused.
 
@@ -563,7 +563,7 @@ setGroupConcurrency(
 ): Promise<number>;
 ```
 
-Defined in: [src/group-queue.ts:431](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L431)
+Defined in: [src/group-queue.ts:431](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L431)
 
 Give one group its own limit, over the workers' group.concurrency. Stored in Redis until
 removeGroupConcurrency(). Resolves to 1 when the group had no limit of its own before, else 0.
@@ -589,7 +589,7 @@ removeGroupConcurrency(). Resolves to 1 when the group had no limit of its own b
 getGroupConcurrency(groupId): Promise<number>;
 ```
 
-Defined in: [src/group-queue.ts:439](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L439)
+Defined in: [src/group-queue.ts:439](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L439)
 
 The group's limit: its own, else the workers' group.concurrency, else Infinity (no limit).
 
@@ -611,7 +611,7 @@ The group's limit: its own, else the workers' group.concurrency, else Infinity (
 removeGroupConcurrency(groupId): Promise<number>;
 ```
 
-Defined in: [src/group-queue.ts:446](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L446)
+Defined in: [src/group-queue.ts:446](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L446)
 
 Drop the group's own limit; it falls back to the workers' group.concurrency. Resolves to 1 if it had one.
 
@@ -633,7 +633,7 @@ Drop the group's own limit; it falls back to the workers' group.concurrency. Res
 deleteGroupConcurrency(groupId): Promise<number>;
 ```
 
-Defined in: [src/group-queue.ts:452](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L452)
+Defined in: [src/group-queue.ts:452](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L452)
 
 #### Parameters
 
@@ -661,7 +661,7 @@ getGroupJobs(
 ): Promise<GroupJob<DataType, ResultType, NameType>[]>;
 ```
 
-Defined in: [src/group-queue.ts:457](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L457)
+Defined in: [src/group-queue.ts:457](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L457)
 
 Jobs waiting in the group, in the order they will run (unprioritized first). Inclusive range, as Pro.
 
@@ -685,7 +685,7 @@ Jobs waiting in the group, in the order they will run (unprioritized first). Inc
 getGroupJobsCount(groupId): Promise<number>;
 ```
 
-Defined in: [src/group-queue.ts:479](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L479)
+Defined in: [src/group-queue.ts:479](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L479)
 
 Jobs waiting in the group.
 
@@ -707,7 +707,7 @@ Jobs waiting in the group.
 getGroupsJobsCount(_limit?): Promise<number>;
 ```
 
-Defined in: [src/group-queue.ts:486](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L486)
+Defined in: [src/group-queue.ts:486](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L486)
 
 Jobs waiting in any group, prioritized or not. O(1); `limit` is accepted for Pro compatibility.
 
@@ -729,7 +729,7 @@ Jobs waiting in any group, prioritized or not. O(1); `limit` is accepted for Pro
 getGroupActiveCount(groupId): Promise<number>;
 ```
 
-Defined in: [src/group-queue.ts:491](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L491)
+Defined in: [src/group-queue.ts:491](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L491)
 
 Jobs of the group handed to workers and not finished: running, retrying, or about to start.
 
@@ -754,7 +754,7 @@ getGroups(start?, end?): Promise<{
 }[]>;
 ```
 
-Defined in: [src/group-queue.ts:496](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L496)
+Defined in: [src/group-queue.ts:496](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L496)
 
 Groups with jobs waiting, longest-waiting first, with their status. Inclusive range, as Pro.
 
@@ -780,7 +780,7 @@ Groups with jobs waiting, longest-waiting first, with their status. Inclusive ra
 getGroupsCount(): Promise<number>;
 ```
 
-Defined in: [src/group-queue.ts:503](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L503)
+Defined in: [src/group-queue.ts:503](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L503)
 
 Number of groups with jobs waiting.
 
@@ -796,7 +796,7 @@ Number of groups with jobs waiting.
 getGroupStatus(groupId): Promise<GroupStatus | null>;
 ```
 
-Defined in: [src/group-queue.ts:508](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L508)
+Defined in: [src/group-queue.ts:508](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L508)
 
 The group's status, or null when it has no jobs waiting and is neither paused nor blocked.
 
@@ -825,7 +825,7 @@ getGroupsByStatus(
 }[]>;
 ```
 
-Defined in: [src/group-queue.ts:514](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L514)
+Defined in: [src/group-queue.ts:514](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L514)
 
 Groups with jobs waiting that are in `status`, with how many jobs wait in each. Reads every group: O(groups).
 
@@ -858,7 +858,7 @@ getGroupsCountByStatus(): Promise<{
 }>;
 ```
 
-Defined in: [src/group-queue.ts:521](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L521)
+Defined in: [src/group-queue.ts:521](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L521)
 
 How many groups with jobs waiting are in each status. Reads every group: O(groups).
 
@@ -882,7 +882,7 @@ getCountsPerPriorityForGroup(groupId, priorities): Promise<{
 }>;
 ```
 
-Defined in: [src/group-queue.ts:528](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L528)
+Defined in: [src/group-queue.ts:528](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L528)
 
 Waiting jobs of the group per priority; priority 0 counts the jobs without one.
 
@@ -907,7 +907,7 @@ Waiting jobs of the group per priority; priority 0 counts the jobs without one.
 deleteGroup(groupId): Promise<void>;
 ```
 
-Defined in: [src/group-queue.ts:540](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L540)
+Defined in: [src/group-queue.ts:540](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L540)
 
 Remove every job waiting in the group. Running and delayed jobs are not touched.
 
@@ -929,7 +929,7 @@ Remove every job waiting in the group. Running and delayed jobs are not touched.
 deleteGroups(): Promise<void>;
 ```
 
-Defined in: [src/group-queue.ts:546](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L546)
+Defined in: [src/group-queue.ts:546](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L546)
 
 Remove every job waiting in any group.
 
@@ -948,7 +948,7 @@ repairMaxedGroup(groupId): Promise<{
 }>;
 ```
 
-Defined in: [src/group-queue.ts:559](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L559)
+Defined in: [src/group-queue.ts:559](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L559)
 
 Recount the group's in-flight jobs and release what fits: repairs a group whose count drifted
 (a write lost in a Redis failover) so that it looks full with nothing running.
@@ -975,7 +975,7 @@ Reads every in-flight record of the queue.
 getBlockedGroups(): Promise<BlockedGroup[]>;
 ```
 
-Defined in: [src/group-queue.ts:569](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L569)
+Defined in: [src/group-queue.ts:569](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L569)
 
 Groups held by jobs that failed for good under failurePolicy 'block'.
 
@@ -991,7 +991,7 @@ Groups held by jobs that failed for good under failurePolicy 'block'.
 retryBlockedGroup(groupId): Promise<string | null>;
 ```
 
-Defined in: [src/group-queue.ts:586](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L586)
+Defined in: [src/group-queue.ts:586](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L586)
 
 Run the oldest job blocking this group again, with a fresh set of attempts. It keeps the
 group's slot, so nothing behind it starts until it finishes. Returns its id, or null when
@@ -1015,7 +1015,7 @@ nothing was blocked, or when the job is gone from BullMQ (the group then moves o
 skipBlockedGroup(groupId): Promise<string | null>;
 ```
 
-Defined in: [src/group-queue.ts:608](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L608)
+Defined in: [src/group-queue.ts:608](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L608)
 
 Give up on the oldest job blocking this group. The group moves on once no job blocks it.
 
@@ -1037,7 +1037,7 @@ Give up on the oldest job blocking this group. The group moves on once no job bl
 getGroupCounts(groupId): Promise<GroupCounts>;
 ```
 
-Defined in: [src/group-queue.ts:619](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L619)
+Defined in: [src/group-queue.ts:619](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L619)
 
 #### Parameters
 
@@ -1057,7 +1057,7 @@ Defined in: [src/group-queue.ts:619](https://github.com/sparq-ai/bullmq-groups/b
 getLaggingGroups(start?, end?): Promise<GroupLag[]>;
 ```
 
-Defined in: [src/group-queue.ts:647](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L647)
+Defined in: [src/group-queue.ts:647](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L647)
 
 Groups with waiting jobs, most behind first, with how long their next job has been ready.
 
@@ -1080,7 +1080,7 @@ Groups with waiting jobs, most behind first, with how long their next job has be
 getStats(): Promise<GroupStats>;
 ```
 
-Defined in: [src/group-queue.ts:669](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L669)
+Defined in: [src/group-queue.ts:669](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L669)
 
 Queue-wide numbers for dashboards and alerts. All O(1) or O(log n).
 
@@ -1096,7 +1096,7 @@ Queue-wide numbers for dashboards and alerts. All O(1) or O(log n).
 getStuckJobs(olderThanMs): Promise<StuckJob[]>;
 ```
 
-Defined in: [src/group-queue.ts:700](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L700)
+Defined in: [src/group-queue.ts:700](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L700)
 
 Jobs that have been in flight longer than `olderThanMs` (running, retrying or waiting in BullMQ).
 
@@ -1118,7 +1118,7 @@ Jobs that have been in flight longer than `olderThanMs` (running, retrying or wa
 obliterate(opts?): Promise<void>;
 ```
 
-Defined in: [src/group-queue.ts:723](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L723)
+Defined in: [src/group-queue.ts:723](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L723)
 
 BullMQ's obliterate, then every group key. Stop workers first. Scans one node, so on Redis
 Cluster all keys must share a hash-tagged prefix.
@@ -1145,7 +1145,7 @@ Cluster all keys must share a hash-tagged prefix.
 repairAll(): Promise<string[]>;
 ```
 
-Defined in: [src/group-queue.ts:738](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L738)
+Defined in: [src/group-queue.ts:738](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L738)
 
 Walk every waiting group once and release what has room, e.g. after a default-concurrency change.
 
@@ -1161,7 +1161,7 @@ Walk every waiting group once and release what has room, e.g. after a default-co
 close(): Promise<void>;
 ```
 
-Defined in: [src/group-queue.ts:749](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L749)
+Defined in: [src/group-queue.ts:749](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L749)
 
 Close the queue instance.
 
@@ -1181,7 +1181,7 @@ Close the queue instance.
 _error(err): void;
 ```
 
-Defined in: [src/group-queue.ts:777](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L777)
+Defined in: [src/group-queue.ts:777](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L777)
 
 Emit 'error' only when someone listens: an unhandled 'error' event would crash the process.
 
@@ -1203,7 +1203,7 @@ Emit 'error' only when someone listens: an unhandled 'error' event would crash t
 _bullJob(jobId): Promise<Job<any, any, string> | undefined>;
 ```
 
-Defined in: [src/group-queue.ts:783](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L783)
+Defined in: [src/group-queue.ts:783](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L783)
 
 The job as BullMQ has it, ignoring jobs that wait in a group.
 
@@ -1225,7 +1225,7 @@ The job as BullMQ has it, ignoring jobs that wait in a group.
 _addReleased(jobs): Promise<void>;
 ```
 
-Defined in: [src/group-queue.ts:788](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L788)
+Defined in: [src/group-queue.ts:788](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L788)
 
 Add released jobs to BullMQ (BullMQ's own addBulk, not the grouped one).
 
@@ -1252,7 +1252,7 @@ _ack(
 ): Promise<string>;
 ```
 
-Defined in: [src/group-queue.ts:797](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L797)
+Defined in: [src/group-queue.ts:797](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L797)
 
 A released job reached a final state in BullMQ: free its slot and release the group's next job.
 `nonce` limits the ack to that release; `requireState` to a release still in that state.
@@ -1279,7 +1279,7 @@ Returns 'ok', 'blocked' or 'none' (nothing to do).
 _markAdded(jobId, nonce): Promise<void>;
 ```
 
-Defined in: [src/group-queue.ts:811](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L811)
+Defined in: [src/group-queue.ts:811](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L811)
 
 #### Parameters
 
@@ -1300,7 +1300,7 @@ Defined in: [src/group-queue.ts:811](https://github.com/sparq-ai/bullmq-groups/b
 _redispatch(jobId, nonce): Promise<boolean>;
 ```
 
-Defined in: [src/group-queue.ts:816](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L816)
+Defined in: [src/group-queue.ts:816](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L816)
 
 Re-add a released job whose BullMQ add never happened (producer crashed in between, add lost).
 
@@ -1328,7 +1328,7 @@ _claim(
 ): Promise<[ClaimVerdict, FailurePolicy, string[]]>;
 ```
 
-Defined in: [src/group-queue.ts:825](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L825)
+Defined in: [src/group-queue.ts:825](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L825)
 
 The start check a GroupWorker runs before a job's processor. Also returns jobs released by it.
 
@@ -1353,7 +1353,7 @@ The start check a GroupWorker runs before a job's processor. Also returns jobs r
 _promoteDelayed(limit?): Promise<number | null>;
 ```
 
-Defined in: [src/group-queue.ts:834](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L834)
+Defined in: [src/group-queue.ts:834](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L834)
 
 Promote due delayed jobs. Returns ms until the next delayed job is due (Redis clock), or null when none.
 
@@ -1385,7 +1385,7 @@ _lease(limit): Promise<{
 }>;
 ```
 
-Defined in: [src/group-queue.ts:840](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L840)
+Defined in: [src/group-queue.ts:840](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L840)
 
 #### Parameters
 
@@ -1418,7 +1418,7 @@ _kick(cursor, count): Promise<{
 }>;
 ```
 
-Defined in: [src/group-queue.ts:857](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L857)
+Defined in: [src/group-queue.ts:857](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L857)
 
 One kick pass over the next page of the group index. ZSCAN, not ranks: releases move groups
 around the index, and a full scan still visits every group that waits throughout.
@@ -1445,7 +1445,7 @@ around the index, and a full scan still visits every group that waits throughout
 _dispatch(released): Promise<void>;
 ```
 
-Defined in: [src/group-queue.ts:871](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L871)
+Defined in: [src/group-queue.ts:871](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L871)
 
 Hand released jobs to BullMQ, then confirm. `released` is [failurePolicy, jobId, nonce,
 payload, ...]. If this process dies in between, the job stays unconfirmed and the reconciler

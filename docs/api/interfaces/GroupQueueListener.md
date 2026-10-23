@@ -6,7 +6,7 @@
 
 # Interface: GroupQueueListener
 
-Defined in: [src/group-queue.ts:68](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L68)
+Defined in: [src/group-queue.ts:68](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L68)
 
 Events a GroupQueue adds to BullMQ's Queue events.
 
@@ -18,7 +18,7 @@ Events a GroupQueue adds to BullMQ's Queue events.
 rejected: (job) => void;
 ```
 
-Defined in: [src/group-queue.ts:70](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L70)
+Defined in: [src/group-queue.ts:70](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L70)
 
 BullMQ refused a released job (for example sizeLimit exceeded); it was dropped from its group.
 
@@ -40,7 +40,7 @@ BullMQ refused a released job (for example sizeLimit exceeded); it was dropped f
 blocked: (groupId, jobId) => void;
 ```
 
-Defined in: [src/group-queue.ts:72](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-queue.ts#L72)
+Defined in: [src/group-queue.ts:72](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-queue.ts#L72)
 
 A job failed for good under failurePolicy 'block', so its group stopped.
 

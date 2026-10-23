@@ -6,7 +6,7 @@
 
 # Class: GroupMaxSizeExceededError
 
-Defined in: [src/types.ts:98](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/types.ts#L98)
+Defined in: [src/types.ts:98](https://github.com/sparq-ai/bullmq-groups/blob/main/src/types.ts#L98)
 
 Thrown by GroupQueue.add when the job's group already has group.maxSize jobs waiting.
 
@@ -22,7 +22,7 @@ Thrown by GroupQueue.add when the job's group already has group.maxSize jobs wai
 new GroupMaxSizeExceededError(groupId, maxSize): GroupMaxSizeExceededError;
 ```
 
-Defined in: [src/types.ts:99](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/types.ts#L99)
+Defined in: [src/types.ts:99](https://github.com/sparq-ai/bullmq-groups/blob/main/src/types.ts#L99)
 
 #### Parameters
 
@@ -47,7 +47,7 @@ Defined in: [src/types.ts:99](https://github.com/sparq-ai/bullmq-groups/blob/dc2
 readonly groupId: string;
 ```
 
-Defined in: [src/types.ts:100](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/types.ts#L100)
+Defined in: [src/types.ts:100](https://github.com/sparq-ai/bullmq-groups/blob/main/src/types.ts#L100)
 
 ***
 
@@ -57,4 +57,4 @@ Defined in: [src/types.ts:100](https://github.com/sparq-ai/bullmq-groups/blob/dc
 readonly maxSize: number;
 ```
 
-Defined in: [src/types.ts:101](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/types.ts#L101)
+Defined in: [src/types.ts:101](https://github.com/sparq-ai/bullmq-groups/blob/main/src/types.ts#L101)

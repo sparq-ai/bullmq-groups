@@ -6,7 +6,7 @@
 
 # Interface: StuckJob
 
-Defined in: [src/types.ts:152](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/types.ts#L152)
+Defined in: [src/types.ts:152](https://github.com/sparq-ai/bullmq-groups/blob/main/src/types.ts#L152)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [src/types.ts:152](https://github.com/sparq-ai/bullmq-groups/blob/dc
 jobId: string;
 ```
 
-Defined in: [src/types.ts:153](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/types.ts#L153)
+Defined in: [src/types.ts:153](https://github.com/sparq-ai/bullmq-groups/blob/main/src/types.ts#L153)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [src/types.ts:153](https://github.com/sparq-ai/bullmq-groups/blob/dc
 groupId: string;
 ```
 
-Defined in: [src/types.ts:154](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/types.ts#L154)
+Defined in: [src/types.ts:154](https://github.com/sparq-ai/bullmq-groups/blob/main/src/types.ts#L154)
 
 ***
 
@@ -36,7 +36,7 @@ Defined in: [src/types.ts:154](https://github.com/sparq-ai/bullmq-groups/blob/dc
 state: string;
 ```
 
-Defined in: [src/types.ts:155](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/types.ts#L155)
+Defined in: [src/types.ts:155](https://github.com/sparq-ai/bullmq-groups/blob/main/src/types.ts#L155)
 
 ***
 
@@ -46,4 +46,4 @@ Defined in: [src/types.ts:155](https://github.com/sparq-ai/bullmq-groups/blob/dc
 ageMs: number;
 ```
 
-Defined in: [src/types.ts:156](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/types.ts#L156)
+Defined in: [src/types.ts:156](https://github.com/sparq-ai/bullmq-groups/blob/main/src/types.ts#L156)

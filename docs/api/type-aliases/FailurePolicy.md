@@ -10,7 +10,7 @@
 type FailurePolicy = "continue" | "block";
 ```
 
-Defined in: [src/types.ts:11](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/types.ts#L11)
+Defined in: [src/types.ts:11](https://github.com/sparq-ai/bullmq-groups/blob/main/src/types.ts#L11)
 
 What a group does when one of its jobs fails after its last attempt. Not in BullMQ Pro, whose
 groups always behave as 'continue'.

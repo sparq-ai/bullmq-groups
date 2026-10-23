@@ -6,7 +6,7 @@
 
 # Interface: BlockedGroup
 
-Defined in: [src/types.ts:122](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/types.ts#L122)
+Defined in: [src/types.ts:122](https://github.com/sparq-ai/bullmq-groups/blob/main/src/types.ts#L122)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [src/types.ts:122](https://github.com/sparq-ai/bullmq-groups/blob/dc
 groupId: string;
 ```
 
-Defined in: [src/types.ts:123](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/types.ts#L123)
+Defined in: [src/types.ts:123](https://github.com/sparq-ai/bullmq-groups/blob/main/src/types.ts#L123)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [src/types.ts:123](https://github.com/sparq-ai/bullmq-groups/blob/dc
 jobId: string;
 ```
 
-Defined in: [src/types.ts:125](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/types.ts#L125)
+Defined in: [src/types.ts:125](https://github.com/sparq-ai/bullmq-groups/blob/main/src/types.ts#L125)
 
 The oldest blocking job: the one retryBlockedGroup and skipBlockedGroup act on.
 
@@ -38,6 +38,6 @@ The oldest blocking job: the one retryBlockedGroup and skipBlockedGroup act on.
 jobIds: string[];
 ```
 
-Defined in: [src/types.ts:127](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/types.ts#L127)
+Defined in: [src/types.ts:127](https://github.com/sparq-ai/bullmq-groups/blob/main/src/types.ts#L127)
 
 Every job blocking the group, oldest first (more than one only at group concurrency above 1).

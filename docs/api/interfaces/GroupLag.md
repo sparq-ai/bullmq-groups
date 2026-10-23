@@ -6,7 +6,7 @@
 
 # Interface: GroupLag
 
-Defined in: [src/types.ts:130](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/types.ts#L130)
+Defined in: [src/types.ts:130](https://github.com/sparq-ai/bullmq-groups/blob/main/src/types.ts#L130)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [src/types.ts:130](https://github.com/sparq-ai/bullmq-groups/blob/dc
 id: string;
 ```
 
-Defined in: [src/types.ts:131](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/types.ts#L131)
+Defined in: [src/types.ts:131](https://github.com/sparq-ai/bullmq-groups/blob/main/src/types.ts#L131)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [src/types.ts:131](https://github.com/sparq-ai/bullmq-groups/blob/dc
 lagMs: number;
 ```
 
-Defined in: [src/types.ts:133](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/types.ts#L133)
+Defined in: [src/types.ts:133](https://github.com/sparq-ai/bullmq-groups/blob/main/src/types.ts#L133)
 
 How long the group's next job has been ready to run.
 
@@ -38,7 +38,7 @@ How long the group's next job has been ready to run.
 waiting: number;
 ```
 
-Defined in: [src/types.ts:134](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/types.ts#L134)
+Defined in: [src/types.ts:134](https://github.com/sparq-ai/bullmq-groups/blob/main/src/types.ts#L134)
 
 ***
 
@@ -48,4 +48,4 @@ Defined in: [src/types.ts:134](https://github.com/sparq-ai/bullmq-groups/blob/dc
 active: number;
 ```
 
-Defined in: [src/types.ts:135](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/types.ts#L135)
+Defined in: [src/types.ts:135](https://github.com/sparq-ai/bullmq-groups/blob/main/src/types.ts#L135)

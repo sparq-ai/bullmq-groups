@@ -6,7 +6,7 @@
 
 # Class: GroupWorker\<DataType, ResultType, NameType\>
 
-Defined in: [src/group-worker.ts:100](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-worker.ts#L100)
+Defined in: [src/group-worker.ts:100](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-worker.ts#L100)
 
 A BullMQ Worker that keeps groups moving, shaped like BullMQ Pro's WorkerPro.
 
@@ -57,7 +57,7 @@ new GroupWorker<DataType, ResultType, NameType>(
 ): GroupWorker<DataType, ResultType, NameType>;
 ```
 
-Defined in: [src/group-worker.ts:125](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-worker.ts#L125)
+Defined in: [src/group-worker.ts:125](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-worker.ts#L125)
 
 #### Parameters
 
@@ -85,7 +85,7 @@ Defined in: [src/group-worker.ts:125](https://github.com/sparq-ai/bullmq-groups/
 get queue(): GroupQueue<DataType>;
 ```
 
-Defined in: [src/group-worker.ts:161](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-worker.ts#L161)
+Defined in: [src/group-worker.ts:161](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-worker.ts#L161)
 
 The group side of this worker's queue. Created on first use.
 
@@ -101,7 +101,7 @@ The group side of this worker's queue. Created on first use.
 on<U>(event, listener): this;
 ```
 
-Defined in: [src/group-worker.ts:165](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-worker.ts#L165)
+Defined in: [src/group-worker.ts:165](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-worker.ts#L165)
 
 #### Type Parameters
 
@@ -132,7 +132,7 @@ Defined in: [src/group-worker.ts:165](https://github.com/sparq-ai/bullmq-groups/
 once<U>(event, listener): this;
 ```
 
-Defined in: [src/group-worker.ts:172](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-worker.ts#L172)
+Defined in: [src/group-worker.ts:172](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-worker.ts#L172)
 
 #### Type Parameters
 
@@ -163,7 +163,7 @@ Defined in: [src/group-worker.ts:172](https://github.com/sparq-ai/bullmq-groups/
 off<U>(event, listener): this;
 ```
 
-Defined in: [src/group-worker.ts:179](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-worker.ts#L179)
+Defined in: [src/group-worker.ts:179](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-worker.ts#L179)
 
 #### Type Parameters
 
@@ -194,7 +194,7 @@ Defined in: [src/group-worker.ts:179](https://github.com/sparq-ai/bullmq-groups/
 run(): Promise<void>;
 ```
 
-Defined in: [src/group-worker.ts:191](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-worker.ts#L191)
+Defined in: [src/group-worker.ts:191](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-worker.ts#L191)
 
 Start processing when created with autorun: false. A worker that declares group options writes
 them to Redis now, so producers release by them; one created with autorun: false and never run
@@ -216,7 +216,7 @@ them to Redis now, so producers release by them; one created with autorun: false
 emit<U>(event, ...args): boolean;
 ```
 
-Defined in: [src/group-worker.ts:197](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-worker.ts#L197)
+Defined in: [src/group-worker.ts:197](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-worker.ts#L197)
 
 #### Type Parameters
 
@@ -247,7 +247,7 @@ Defined in: [src/group-worker.ts:197](https://github.com/sparq-ai/bullmq-groups/
 close(force?): Promise<void>;
 ```
 
-Defined in: [src/group-worker.ts:211](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-worker.ts#L211)
+Defined in: [src/group-worker.ts:211](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-worker.ts#L211)
 
 Graceful by default: stops the reconciler, lets running jobs finish, then waits for their
 group bookkeeping, so the next job of each group is already in BullMQ for another worker.
@@ -276,7 +276,7 @@ the bookkeeping would never finish). Another worker's reconciler completes what 
 reconcile(): Promise<ReconcileSummary>;
 ```
 
-Defined in: [src/group-worker.ts:283](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-worker.ts#L283)
+Defined in: [src/group-worker.ts:283](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-worker.ts#L283)
 
 One reconciler pass. Exposed for tests and for running it from a cron instead of every worker.
 

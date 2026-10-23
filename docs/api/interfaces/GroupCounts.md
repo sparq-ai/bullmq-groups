@@ -6,7 +6,7 @@
 
 # Interface: GroupCounts
 
-Defined in: [src/types.ts:108](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/types.ts#L108)
+Defined in: [src/types.ts:108](https://github.com/sparq-ai/bullmq-groups/blob/main/src/types.ts#L108)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [src/types.ts:108](https://github.com/sparq-ai/bullmq-groups/blob/dc
 waiting: number;
 ```
 
-Defined in: [src/types.ts:109](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/types.ts#L109)
+Defined in: [src/types.ts:109](https://github.com/sparq-ai/bullmq-groups/blob/main/src/types.ts#L109)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [src/types.ts:109](https://github.com/sparq-ai/bullmq-groups/blob/dc
 prioritized: number;
 ```
 
-Defined in: [src/types.ts:110](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/types.ts#L110)
+Defined in: [src/types.ts:110](https://github.com/sparq-ai/bullmq-groups/blob/main/src/types.ts#L110)
 
 ***
 
@@ -36,7 +36,7 @@ Defined in: [src/types.ts:110](https://github.com/sparq-ai/bullmq-groups/blob/dc
 active: number;
 ```
 
-Defined in: [src/types.ts:112](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/types.ts#L112)
+Defined in: [src/types.ts:112](https://github.com/sparq-ai/bullmq-groups/blob/main/src/types.ts#L112)
 
 Jobs handed to workers and not finished: running, retrying or about to start.
 
@@ -48,7 +48,7 @@ Jobs handed to workers and not finished: running, retrying or about to start.
 concurrency: number;
 ```
 
-Defined in: [src/types.ts:114](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/types.ts#L114)
+Defined in: [src/types.ts:114](https://github.com/sparq-ai/bullmq-groups/blob/main/src/types.ts#L114)
 
 Infinity when the group has no limit.
 
@@ -60,7 +60,7 @@ Infinity when the group has no limit.
 paused: boolean;
 ```
 
-Defined in: [src/types.ts:115](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/types.ts#L115)
+Defined in: [src/types.ts:115](https://github.com/sparq-ai/bullmq-groups/blob/main/src/types.ts#L115)
 
 ***
 
@@ -70,7 +70,7 @@ Defined in: [src/types.ts:115](https://github.com/sparq-ai/bullmq-groups/blob/dc
 blockedJobId: string | null;
 ```
 
-Defined in: [src/types.ts:117](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/types.ts#L117)
+Defined in: [src/types.ts:117](https://github.com/sparq-ai/bullmq-groups/blob/main/src/types.ts#L117)
 
 The oldest job blocking the group under failurePolicy 'block', or null.
 
@@ -82,6 +82,6 @@ The oldest job blocking the group under failurePolicy 'block', or null.
 headReadyAt: number | null;
 ```
 
-Defined in: [src/types.ts:119](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/types.ts#L119)
+Defined in: [src/types.ts:119](https://github.com/sparq-ai/bullmq-groups/blob/main/src/types.ts#L119)
 
 When the job this group runs next became ready (ms epoch), or null when nothing is waiting.

@@ -6,7 +6,7 @@
 
 # Interface: GroupWorkerListener\<DataType, ResultType, NameType\>
 
-Defined in: [src/group-worker.ts:20](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-worker.ts#L20)
+Defined in: [src/group-worker.ts:20](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-worker.ts#L20)
 
 Events a GroupWorker adds to BullMQ's Worker events.
 
@@ -30,7 +30,7 @@ Events a GroupWorker adds to BullMQ's Worker events.
 stuck: (job) => void;
 ```
 
-Defined in: [src/group-worker.ts:23](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-worker.ts#L23)
+Defined in: [src/group-worker.ts:23](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-worker.ts#L23)
 
 A job has been running for longer than stuckAfterMs. Reported by the reconciler, at most once per check.
 
@@ -52,7 +52,7 @@ A job has been running for longer than stuckAfterMs. Reported by the reconciler,
 blocked: (groupId, jobId) => void;
 ```
 
-Defined in: [src/group-worker.ts:25](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-worker.ts#L25)
+Defined in: [src/group-worker.ts:25](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-worker.ts#L25)
 
 A job failed for good under failurePolicy 'block', so its group stopped.
 
@@ -75,7 +75,7 @@ A job failed for good under failurePolicy 'block', so its group stopped.
 repaired: (groupIds) => void;
 ```
 
-Defined in: [src/group-worker.ts:27](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-worker.ts#L27)
+Defined in: [src/group-worker.ts:27](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-worker.ts#L27)
 
 The reconciler released jobs of groups that had room but no release (lost writes, a new default concurrency).
 
@@ -97,7 +97,7 @@ The reconciler released jobs of groups that had room but no release (lost writes
 skipped: (job) => void;
 ```
 
-Defined in: [src/group-worker.ts:29](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-worker.ts#L29)
+Defined in: [src/group-worker.ts:29](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-worker.ts#L29)
 
 A BullMQ job the worker did not run because it is not the release its group is waiting for.
 
@@ -119,7 +119,7 @@ A BullMQ job the worker did not run because it is not the release its group is w
 rejected: (job) => void;
 ```
 
-Defined in: [src/group-worker.ts:31](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-worker.ts#L31)
+Defined in: [src/group-worker.ts:31](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-worker.ts#L31)
 
 BullMQ refused to add a released job; it was dropped from its group.
 

@@ -6,7 +6,7 @@
 
 # Class: GroupJob\<DataType, ReturnType, NameType\>
 
-Defined in: [src/group-job.ts:24](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-job.ts#L24)
+Defined in: [src/group-job.ts:24](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-job.ts#L24)
 
 A BullMQ job that knows its group (BullMQ Pro's JobPro). Every job a GroupQueue or GroupWorker
 returns is one, grouped or not. A grouped job that is still waiting in its group, and so not yet
@@ -66,7 +66,7 @@ Defined in: node\_modules/bullmq/dist/esm/classes/job.d.ts:152
 opts: GroupJobsOptions;
 ```
 
-Defined in: [src/group-job.ts:29](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-job.ts#L29)
+Defined in: [src/group-job.ts:29](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-job.ts#L29)
 
 The options object for this job.
 
@@ -84,7 +84,7 @@ The options object for this job.
 get gid(): string | undefined;
 ```
 
-Defined in: [src/group-job.ts:32](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-job.ts#L32)
+Defined in: [src/group-job.ts:32](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-job.ts#L32)
 
 The job's group id (BullMQ Pro's JobPro.gid), or undefined for a job added without a group.
 
@@ -100,7 +100,7 @@ The job's group id (BullMQ Pro's JobPro.gid), or undefined for a job added witho
 getState(): Promise<JobState | "unknown">;
 ```
 
-Defined in: [src/group-job.ts:36](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-job.ts#L36)
+Defined in: [src/group-job.ts:36](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-job.ts#L36)
 
 Get current state.
 
@@ -123,7 +123,7 @@ Returns one of these values:
 remove(opts?): Promise<void>;
 ```
 
-Defined in: [src/group-job.ts:42](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/group-job.ts#L42)
+Defined in: [src/group-job.ts:42](https://github.com/sparq-ai/bullmq-groups/blob/main/src/group-job.ts#L42)
 
 Completely remove the job from the queue.
 Note, this call will throw an exception if the job

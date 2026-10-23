@@ -6,7 +6,7 @@
 
 # Interface: GroupJobsOptions
 
-Defined in: [src/types.ts:40](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/types.ts#L40)
+Defined in: [src/types.ts:40](https://github.com/sparq-ai/bullmq-groups/blob/main/src/types.ts#L40)
 
 Job options of a GroupQueue (BullMQ Pro's JobsProOptions). Without `group` a job is a plain
 BullMQ job and every BullMQ option applies. With `group`, jobId, delay, attempts, backoff,
@@ -30,4 +30,4 @@ removeOnComplete/Fail and the other BullMQ options work as usual, except:
 group?: JobGroupOptions;
 ```
 
-Defined in: [src/types.ts:41](https://github.com/sparq-ai/bullmq-groups/blob/dc20d36ea32affa5489baa18d51bb368047f77d1/src/types.ts#L41)
+Defined in: [src/types.ts:41](https://github.com/sparq-ai/bullmq-groups/blob/main/src/types.ts#L41)
