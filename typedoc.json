@@ -1,0 +1,29 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "plugin": [
+    "typedoc-plugin-markdown"
+  ],
+  "entryPoints": [
+    "src/index.ts"
+  ],
+  "tsconfig": "tsconfig.build.json",
+  "out": "docs/api",
+  "readme": "none",
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "excludeInternal": true,
+  "excludeExternals": true,
+  "githubPages": false,
+  "hideGenerator": true,
+  "sort": [
+    "source-order"
+  ],
+  "entryFileName": "README.md",
+  "mergeReadme": false,
+  "useCodeBlocks": true,
+  "expandObjects": true,
+  "parametersFormat": "table",
+  "enumMembersFormat": "table",
+  "typeDeclarationFormat": "table",
+  "gitRevision": "main"
+}
