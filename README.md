@@ -7,7 +7,7 @@ Per-group FIFO and fairness for open-source BullMQ: an alternative to BullMQ Pro
 
 Not affiliated with or endorsed by Taskforce.sh. BullMQ and BullMQ Pro are theirs; this is an independent package built on open-source BullMQ's public API.
 
-**Status: proof of concept, not yet run in production.** The test suite passes on BullMQ 5.40.0 to 6.3.15.
+**Status: 0.1.x.** The test suite — 77 tests including crash, reconnect and failover scenarios — passes on BullMQ 5.40.0 through 6.3.15. Not yet run in production; if you adopt it, open an issue and tell us how it goes.
 
 ## Install
 
