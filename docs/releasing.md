@@ -31,7 +31,7 @@ On every push to `main`, `.github/workflows/npm-publish.yml` runs typecheck, tes
 
 So a merge that does not touch the version is a clean no-op, and you never publish by accident.
 
-Tests run on pull requests only (`test.yml`), so a merge does not re-run what the PR already proved.
+Tests run on pull requests only (`ci.yml`), so a merge does not re-run what the PR already proved.
 
 ## Authentication
 
